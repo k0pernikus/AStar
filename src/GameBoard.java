@@ -68,7 +68,6 @@ public class GameBoard extends JFrame implements ActionListener{
 		gameBoardState = new SmartButton[rows][columns];
 		createButtons();
 
-
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
@@ -76,7 +75,7 @@ public class GameBoard extends JFrame implements ActionListener{
 	}
 
 
-	//Loops through gameboard and make sure every button calculates its neighbours
+	//Loops through gameboard and make sure every button calculates its neighbors
 	private void generateNeighbours() {
 		for (int i=0;i< rows;i++){
 			for(int l=0;l<columns;l++){
@@ -98,7 +97,7 @@ public class GameBoard extends JFrame implements ActionListener{
 
 
 
-	//Tells the specified button to calculate and add its neighbours.
+	//Tells the specified button to calculate and add its neighbors.
 	private void calculateNeighbours(SmartButton button){
 		int top = button.getColumn()+1;
 		int buttom = button.getColumn()-1;
@@ -181,19 +180,25 @@ public class GameBoard extends JFrame implements ActionListener{
 
 				AStar pathfinder = new AStar();
 				List<SmartButton> path =pathfinder.getPath(start, stop);
-				for (int i = 0;i<path.size();i++){
-					System.out.println("Path: "+path.get(i).getRow() +" " + path.get(i).getColumn());
-				}
-				if (path.size() > 2){
-					for (int i=1;i<path.size()-1;i++){
-						path.get(i).setBackground(Color.PINK);
+				
+				//If a path exists
+				if (path != null){
+					for (int i = 0;i<path.size();i++){
+						System.out.println("Path: "+path.get(i).getRow() +" " + path.get(i).getColumn());
 					}
+					if (path.size() > 2){
+						for (int i=1;i<path.size()-1;i++){
+							path.get(i).setBackground(Color.PINK);
+						}
+					}
+					//If no possible path was found
+				}else {
+					System.out.println("no path");
 				}
 			}
 		}
 
-		/*Loops through entire gameboard of buttons until a button with a actioncommand matching the given actioncommand from e.
-		 * when the button is found, the color and state (and possible the text) of the button is changed depending on its SmartButtonState*/
+		/*Checks every button on the gameboard for a matching actioncommand to the one used. Will change state of button.*/
 		for (int i=0;i<rows;i++){
 			for(int l=0;l<columns;l++){
 				if (e.getActionCommand().equals(i+","+l)){

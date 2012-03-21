@@ -6,38 +6,37 @@ public class AStar {
 	private List <SmartButton> openList;
 	private SmartButton currentTile;
 
-	
-	/*Main algorithm. Given a start and a goal, will return the shortest path between the two.*/
+
+	/*Main algorithm. Given a start and a goal, will return the shortest path between the two. 
+	 * If no path is to be found, the return will be a null-object*/
 	public List<SmartButton> getPath(SmartButton start, SmartButton stop){
 		openList = new ArrayList <SmartButton>();
 		ArrayList <SmartButton> path = new ArrayList<SmartButton>();
 		openList.add(start);
-		
-		while(true){
+
+		while(!openList.isEmpty()){
 			int pointer = findBestTile();
 			currentTile=openList.get(pointer);
-				if(currentTile.equals(stop)){
-					path.add(currentTile);
-					while(currentTile!=start){
-						path.add(currentTile.parent);
-						currentTile = currentTile.parent;
-					}
-					return path;
-					
-					//The goal was not found in the openList
-				}else {
-					updateNeighbors(currentTile.getNeighbours());
-					currentTile.setClosed(true);
-					currentTile.setOpen(false);
-					if (openList.size() >1){
-						removeFromOpen(currentTile);
-					}
-					currentTile = openList.get(pointer);
-			
+			//If true = algorithm complete and path found.
+			if(currentTile.equals(stop)){
+				path.add(currentTile);
+				while(currentTile!=start){
+					path.add(currentTile.parent);
+					currentTile = currentTile.parent;
 				}
-			}
+				return path;
 
+				//The goal was not found in the openList
+			}else {
+				updateNeighbors(currentTile.getNeighbours());
+				currentTile.setClosed(true);
+				currentTile.setOpen(false);
+				removeFromOpen(currentTile);
+			}
 		}
+		return null;
+
+	}
 
 	/*Returns the index of the tile in the open list with the lowest f-value*/
 	private int findBestTile(){
@@ -51,7 +50,7 @@ public class AStar {
 		}
 		return pointer;
 	}
-	
+
 	/*Loop through the given list, and updates depending on its relation to its adjacent tile, the one currently selected
 	 * Should a tile be in a closed or open state, the length of the path between it and the start
 	 * will be compared to what it would have been had we measured the current path to it instead. Should the tile be neither closed nor open, 
@@ -86,7 +85,7 @@ public class AStar {
 			}
 		}
 	}
-	
+
 	//Given a SmartButton, will return whether or not the current path from the start to the button is shorter than the currently recorded.
 	private boolean currentPathIsShorter(SmartButton button){
 		return button.g > (currentTile.isDiagonal(button) ? currentTile.g+Math.sqrt(2) : currentTile.g+1);
