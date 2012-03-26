@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /*Class for representing a tile in the AStar-algorithm*/
@@ -21,6 +22,7 @@ public class AStarTile {
 		this.column=toRepresent.getColumn();
 		open=false;
 		closed=false;
+		this.neighbors=new ArrayList <AStarTile>();
 		
 		if(toRepresent.state==TileState.COLLIDABLE){
 			solid=true;
@@ -87,12 +89,16 @@ public class AStarTile {
 		}
 	}
 
-	public void setH(SmartButton start){
-		this.h = (Math.abs(this.row-start.getRow()) + Math.abs(this.column-start.getColumn()));
+	public void setH(AStarTile stop){
+		this.h = (Math.abs(this.row-stop.getRow()) + Math.abs(this.column-stop.getColumn()));
 	}
 
 	public void setF(){
 		this.f=this.h+this.g;
+	}
+	
+	public void setSolid(boolean value){
+		this.solid=value;
 	}
 
 

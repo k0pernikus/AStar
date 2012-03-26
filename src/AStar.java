@@ -8,7 +8,6 @@ import java.util.List;
 
 public class AStar {
 	private List <AStarTile> openList;
-	private List <AStarTile> closedList;
 	private AStarTile [][] logicList;
 	private AStarTile currentTile;
 	private SmartButton [][] gameBoard;
@@ -45,6 +44,12 @@ public class AStar {
 	public List<SmartButton> getPath(SmartButton startPoint, SmartButton endPoint){
 		AStarTile start = logicList[startPoint.getRow()][startPoint.getColumn()];
 		AStarTile stop = logicList[endPoint.getRow()][endPoint.getColumn()];
+		for (int i = 0; i < rows; i++) {
+			for (int l = 0; l < columns; l++) {
+				logicList[i][l].setH(stop);
+				logicList[i][l].setSolid(gameBoard[i][l].state == TileState.COLLIDABLE);
+			}
+		}
 		openList = new ArrayList <AStarTile>();
 		ArrayList <AStarTile> path = new ArrayList<AStarTile>();
 		openList.add(start);
@@ -71,6 +76,7 @@ public class AStar {
 				removeFromOpen(currentTile);
 			}
 		}
+		clear();
 		return null;
 
 	}
@@ -185,7 +191,6 @@ public class AStar {
 	
 	public void clear(){
 		clearOpen();
-		clearClosed();
 	}
 
 	private void clearOpen(){
@@ -194,11 +199,7 @@ public class AStar {
 		}
 	}
 
-	private void clearClosed(){
-		for (int i=0;i<closedList.size();i++){
-			closedList.remove(i);
-		}
-	}
+
 	
 	private List <SmartButton> convertList(List <AStarTile> path){
 		List <SmartButton> returnList = new ArrayList <SmartButton>();

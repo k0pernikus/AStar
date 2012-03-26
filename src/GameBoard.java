@@ -23,6 +23,7 @@ public class GameBoard extends JFrame implements ActionListener {
 	private SmartButton stop;
 	private SmartButton start;
 	JPanel gridPanel;
+	private AStar pathfinder;
 
 	SmartButton[][] gameBoardState;
 
@@ -69,6 +70,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		gameBoardState = new SmartButton[rows][columns];
 		createButtons();
 
+		pathfinder = new AStar(gameBoardState,rows,columns);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
@@ -76,16 +78,16 @@ public class GameBoard extends JFrame implements ActionListener {
 
 
 	// Initiate buttons and adds them to gameboard
-			private void createButtons() {
-				for (int i = 0; i < rows; i++) {
-					for (int l = 0; l < columns; l++) {
-						gameBoardState[i][l] = new SmartButton(i, l, this);
-						gameBoardState[i][l].setActionCommand(i + "," + l);
-						gridPanel.add(gameBoardState[i][l]);
-					}
-				}
+	private void createButtons() {
+		for (int i = 0; i < rows; i++) {
+			for (int l = 0; l < columns; l++) {
+				gameBoardState[i][l] = new SmartButton(i, l, this);
+				gameBoardState[i][l].setActionCommand(i + "," + l);
+				gridPanel.add(gameBoardState[i][l]);
 			}
-	
+		}
+	}
+
 
 	public int getRows() {
 		return this.rows;
@@ -99,9 +101,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		return gameBoardState[row][column];
 	}
 
-	public List<SmartButton> trackPath(AStar tracker, SmartButton start) {
-		return tracker.getPath(start);
-	}
+
 
 	private void paintPath(List<SmartButton> path) {
 		for (int i = 0; i < path.size(); i++) {
@@ -137,10 +137,9 @@ public class GameBoard extends JFrame implements ActionListener {
 					gameBoardState[i][l].setText(null);
 					gameBoardState[i][l].setBackground(Color.WHITE);
 					gameBoardState[i][l].state = TileState.REGULAR;
-					gameBoardState[i][l].parent = null;
-					gameBoardState[i][l].setOpen(false);
-					gameBoardState[i][l].setClosed(false);
+
 				}
+
 			}
 		}
 
@@ -150,13 +149,8 @@ public class GameBoard extends JFrame implements ActionListener {
 
 		else if (e.getActionCommand().equals("findPath")) {
 			if (startPlaced && stopPlaced) {
-				for (int i = 0; i < rows; i++) {
-					for (int l = 0; l < columns; l++) {
-						gameBoardState[i][l].setH(stop);
-					}
-				}
-				AStar pathfinder = new AStar(stop);
-				List<SmartButton> path = trackPath(pathfinder, start);
+
+				List<SmartButton> path = pathfinder.getPath(start, stop);
 				// If a path exists
 				if (path != null) {
 					paintPath(path);
@@ -170,8 +164,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
 
 		/*
-		 * Checks every button on the gameboard for a matching actioncommand to
-		 * the one used. Will change state of button.
+		 * Accessed if the call is made from a button in the gridView.
 		 */
 		for (int i = 0; i < rows; i++) {
 			for (int l = 0; l < columns; l++) {
@@ -181,7 +174,8 @@ public class GameBoard extends JFrame implements ActionListener {
 						gameBoardState[i][l].setBackground(Color.BLACK);
 						gameBoardState[i][l].state = TileState.COLLIDABLE;
 
-					} else if (gameBoardState[i][l].state == TileState.COLLIDABLE) {
+					} else if (gameBoardState[i][l].state == TileState.COLLIDABLE
+							&& !startPlaced) {
 						gameBoardState[i][l].state = TileState.START;
 						gameBoardState[i][l].setBackground(Color.GREEN);
 						gameBoardState[i][l].setText("Start");
@@ -203,6 +197,7 @@ public class GameBoard extends JFrame implements ActionListener {
 						gameBoardState[i][l].setText(null);
 						gameBoardState[i][l].setBackground(Color.WHITE);
 						gameBoardState[i][l].state = TileState.REGULAR;
+						stopPlaced=false;
 					}
 				}
 			}
