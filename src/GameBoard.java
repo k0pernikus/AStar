@@ -113,6 +113,7 @@ public class GameBoard extends JFrame implements ActionListener {
 			// last element in order to keep look on start/stop-buttons intact.
 			for (int i = 1; i < path.size() - 1; i++) {
 				path.get(i).setBackground(Color.PINK);
+			
 			}
 		}
 
