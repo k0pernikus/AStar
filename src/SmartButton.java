@@ -19,13 +19,13 @@ public class SmartButton extends JButton{
 	private int row;
 
 	//The cost to reach this tile from the starting point.
-	public double g;
+	private double g;
 
 	//the estimated (just a motivated guess) cost to reach the goal from this tile.
-	public double h;
+	private double h;
 
 	//h+g, a estimated guess of the total cost to reach the goal from this tile.
-	public double f;
+	private double f;
 	//The tile from which we reached this tile, using the A* algorithm.
 	public SmartButton parent;
 	private boolean closed;
@@ -33,10 +33,10 @@ public class SmartButton extends JButton{
 	
 	private List<SmartButton> neighbours;
 
-	public SmartButtonState state;
+	public TileState state;
 
 	public SmartButton(int row, int column,ActionListener listener){
-		state = SmartButtonState.REGULAR;
+		state = TileState.REGULAR;
 		setBackground(Color.WHITE);
 		this.setBorder(new LineBorder(Color.RED, 1));
 		this.setOpaque(true);
@@ -66,6 +66,7 @@ public class SmartButton extends JButton{
 		neighbours.add(button);
 	}
 
+	//Since the h-value is unchanging, this method will also change the value of f (g+h)
 	public void setG(double g){
 		if (this.h >0){
 		this.g = g;
@@ -73,10 +74,10 @@ public class SmartButton extends JButton{
 		}
 	}
 	
-	public void setH(SmartButton start){
-		h = (Math.abs(this.row-start.row) + Math.abs(this.column-start.column));
-	}
+	public void setH(SmartButton stop){
+		h = (Math.abs(this.row-stop.getRow()) + Math.abs(this.column-stop.getColumn()));
 
+	}
 	public void setClosed(boolean value){
 		this.closed=value;
 	}
@@ -91,6 +92,18 @@ public class SmartButton extends JButton{
 	
 	public boolean isOpen(){
 		return this.open;
+	}
+	
+	public double getH(){
+		return this.h;
+	}
+	
+	public double getF(){
+		return this.h;
+	}
+	
+	public double getG(){
+		return this.g;
 	}
 	
 	public boolean isDiagonal(SmartButton button){
