@@ -149,6 +149,15 @@ public class GameBoard extends JFrame implements ActionListener {
 		}
 
 		else if (e.getActionCommand().equals("findPath")) {
+			for (int i = 0; i < rows; i++) {
+				for (int l = 0; l < columns; l++) {
+					if (gameBoardState[i][l].state == TileState.REGULAR){
+						gameBoardState[i][l].setBackground(Color.WHITE);
+						gameBoardState[i][l].state = TileState.REGULAR;
+					}
+
+				}
+			}
 			if (startPlaced && stopPlaced) {
 
 				List<SmartButton> path = pathfinder.getPath(start, stop);
