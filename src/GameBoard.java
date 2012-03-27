@@ -113,7 +113,7 @@ public class GameBoard extends JFrame implements ActionListener {
 			// last element in order to keep look on start/stop-buttons intact.
 			for (int i = 1; i < path.size() - 1; i++) {
 				path.get(i).setBackground(Color.PINK);
-			
+
 			}
 		}
 
@@ -179,28 +179,37 @@ public class GameBoard extends JFrame implements ActionListener {
 		for (int i = 0; i < rows; i++) {
 			for (int l = 0; l < columns; l++) {
 				if (e.getActionCommand().equals(i + "," + l)) {
-
 					if (gameBoardState[i][l].state == TileState.REGULAR) {
 						gameBoardState[i][l].setBackground(Color.BLACK);
 						gameBoardState[i][l].state = TileState.COLLIDABLE;
 
-					} else if (gameBoardState[i][l].state == TileState.COLLIDABLE
-							&& !startPlaced) {
-						gameBoardState[i][l].state = TileState.START;
-						gameBoardState[i][l].setBackground(Color.GREEN);
-						gameBoardState[i][l].setText("Start");
-						startPlaced = true;
-						start=gameBoardState[i][l];
+					} else if (gameBoardState[i][l].state == TileState.COLLIDABLE) {
+						if (!startPlaced){
+							gameBoardState[i][l].state = TileState.START;
+							gameBoardState[i][l].setBackground(Color.GREEN);
+							gameBoardState[i][l].setText("Start");
+							startPlaced = true;
+							start=gameBoardState[i][l];
+						}else{
+							gameBoardState[i][l].setBackground(Color.WHITE);
+							gameBoardState[i][l].state = TileState.REGULAR;
+						}
 
 
-					} else if (gameBoardState[i][l].state == TileState.START
-							&& !stopPlaced) {
-						gameBoardState[i][l].state = TileState.STOP;
-						gameBoardState[i][l].setText("stop");
-						gameBoardState[i][l].setBackground(Color.BLUE);
-						this.stop = gameBoardState[i][l];
-						stopPlaced = true;
-						startPlaced = false;
+					} else if (gameBoardState[i][l].state == TileState.START) {
+						if (!stopPlaced){
+							gameBoardState[i][l].state = TileState.STOP;
+							gameBoardState[i][l].setText("stop");
+							gameBoardState[i][l].setBackground(Color.BLUE);
+							this.stop = gameBoardState[i][l];
+							stopPlaced = true;
+							startPlaced = false;
+						}else {
+							gameBoardState[i][l].setBackground(Color.WHITE);
+							gameBoardState[i][l].state = TileState.REGULAR;
+							gameBoardState[i][l].setText(null);
+							startPlaced=false;
+						}
 
 
 					} else if (gameBoardState[i][l].state == TileState.STOP) {
