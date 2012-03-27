@@ -14,6 +14,7 @@ public class AStar {
 	private AStarTile[][] logicList;
 	private AStarTile currentTile;
 	private SmartButton[][] gameBoard;
+	private final double DIAGONALCOST= 1.41421356;
 
 	private int columns;
 	private int rows;
@@ -117,10 +118,8 @@ public class AStar {
 			// currentTile
 			if (currentNeighbors.get(k).isClosed()
 					&& currentPathIsShorter(currentNeighbors.get(k))) {
-				currentNeighbors
-						.get(k)
-						.setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? currentTile
-								.getG() + 1.4 : currentTile.getG() + 1);
+				currentNeighbors.get(k).setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? 
+						currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
 				currentNeighbors.get(k).setParent(currentTile);
 
 				// if a tile is open and the current paths g-value would be
@@ -132,7 +131,7 @@ public class AStar {
 				currentNeighbors
 						.get(k)
 						.setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? currentTile
-								.getG() + 1.4 : currentTile.getG() + 1);
+								.getG() + DIAGONALCOST : currentTile.getG() + 1);
 				currentNeighbors.get(k).setParent(currentTile);
 
 				// if a tile is neither open nor closed, we add it the openList
@@ -147,7 +146,7 @@ public class AStar {
 					currentNeighbors.get(k).setParent(currentTile);
 					currentNeighbors.get(k)
 							.setG(currentTile.isDiagonal(currentNeighbors
-									.get(k)) ? currentTile.getG() + 1.4
+									.get(k)) ? currentTile.getG() + DIAGONALCOST
 									: currentTile.getG() + 1);
 				}
 			}
@@ -157,7 +156,7 @@ public class AStar {
 	// Given a SmartButton, will return whether or not the current path from the
 	// start to the button is shorter than the currently recorded.
 	private boolean currentPathIsShorter(AStarTile tile) {
-		return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + 1.4
+		return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST
 				: currentTile.getG() + 1);
 	}
 
