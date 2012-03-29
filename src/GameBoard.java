@@ -128,7 +128,6 @@ public class GameBoard extends JFrame implements ActionListener {
 			// Starting from second element and stopping one before reaching the
 			// last element in order to keep look on start/stop-buttons intact.
 			for (int i = 0; i < path.size(); i++) {
-				//path.get(i).setBackground(Color.PINK);
 				//Get center point of each element, add them to path in LinePanel
 				Rectangle place = path.get(i).getBounds();
 				int x = place.x+place.width/2;
@@ -148,7 +147,7 @@ public class GameBoard extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// If the reset-button is pressed, the gameboard will be reset, all
-		// buttons changed to regular and white.
+		// buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the gridPanel will be erased.
 		if (e.getActionCommand().equals("reset")) {
 			startPlaced = false;
 			stopPlaced = false;
