@@ -1,7 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-/*Class for representing a tile in the AStar-algorithm*/
+/**
+ * Class for representing a tile from some Gameboard, in order to implement A*-algorithm.
+ * All variables for the algorithm is stored within the AStarTile, only the. 
+ * @author jesperpersson
+ *
+ */
 public class AStarTile {
 
 	private double g;
@@ -80,11 +85,13 @@ public class AStarTile {
 		this.parent = parent;
 	}
 
-	// Since the h-value is unchanging, this method will also change the value
-	// of f (g+h)
+	
+
+	
 	public void setG(double g) {
 		if (this.h > 0) {
 			this.g = g;
+			//Updates the value of F, since F is dependent on the constant value of h and G.
 			setF();
 		}
 	}

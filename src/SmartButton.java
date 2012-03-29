@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
 /**
- *A Button class capable of representing a node a  A*-algorithm.
+ *A Button class capable of representing different kinds of "states", Start, Stop, Regular or Collidable.
  * @author jesperpersson
  *
  */
@@ -41,6 +42,7 @@ public class SmartButton extends JButton{
 		return this.row;
 	}
 	
+
 
 	
 

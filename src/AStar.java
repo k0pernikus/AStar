@@ -29,7 +29,6 @@ public class AStar {
 				logicList[i][l] = new AStarTile(GameBoard[i][l]);
 			}
 		}
-
 		init();
 	}
 
