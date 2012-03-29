@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -27,7 +28,7 @@ public class GameBoard extends JFrame implements ActionListener {
 	private boolean stopPlaced;
 	private SmartButton stop;
 	private SmartButton start;
-	JPanel gridPanel;
+	LinePanel gridPanel;
 	private AStar pathfinder;
 
 	SmartButton[][] gameBoardState;
@@ -43,7 +44,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		this.setLayout(new BorderLayout());
 
 		// Initiates and specifies the panel holding the gameboard
-		gridPanel = new JPanel();
+		gridPanel = new LinePanel();
 		gridPanel.setPreferredSize(new Dimension(rows * 31, columns * 31));
 		gridPanel.setLayout(new GridLayout(rows, columns));
 		this.add(gridPanel, BorderLayout.CENTER);
@@ -78,7 +79,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
-	
+
 	}
 
 	public static void main(String[] args) {
@@ -126,16 +127,22 @@ public class GameBoard extends JFrame implements ActionListener {
 		if (path.size() > 2) {
 			// Starting from second element and stopping one before reaching the
 			// last element in order to keep look on start/stop-buttons intact.
-			for (int i = 1; i < path.size() - 1; i++) {
-				path.get(i).setBackground(Color.PINK);
+			for (int i = 0; i < path.size(); i++) {
+				//path.get(i).setBackground(Color.PINK);
+				//Get center point of each element, add them to path in LinePanel
+				Rectangle place = path.get(i).getBounds();
+				int x = place.x+place.width/2;
+				int y = place.y+place.height/2;
+				gridPanel.addToPath(new Point(x,y));
 			}
+			gridPanel.repaint();
 		}
 	}
-	
-	private Point convertPosToTile(Point point){
-		 int y = point.y/this.rows;
-		 int x= point.x/this.columns;
-		return new Point(x,y);
+
+	private Point convertPosToTile(Point point) {
+		int y = point.y / this.rows;
+		int x = point.x / this.columns;
+		return new Point(x, y);
 	}
 
 	@Override
@@ -147,6 +154,7 @@ public class GameBoard extends JFrame implements ActionListener {
 			stopPlaced = false;
 			stop = null;
 			start = null;
+			gridPanel.clearPath();
 
 			for (int i = 0; i < rows; i++) {
 				for (int l = 0; l < columns; l++) {
@@ -185,7 +193,9 @@ public class GameBoard extends JFrame implements ActionListener {
 					System.out.println("No path found ");
 				}
 			}
+
 		}
+		
 
 		/*
 		 * Accessed if the call is made from a button in the gridView.
