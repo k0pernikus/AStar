@@ -23,8 +23,6 @@ public class LinePanel extends JPanel {
 			}
 		}
 
-
-
 	}
 
 	public void addToPath(Point point){

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Class for representing a grid field of tiles, capable of finding paths
  * between tiles in the field.
@@ -23,17 +24,18 @@ public class AStar {
 		this.gameBoard = GameBoard;
 		this.columns = columns;
 		this.rows = rows;
-		logicList = new AStarTile[rows][columns];
-		for (int i = 0; i < GameBoard.length; i++) {
-			for (int l = 0; l < GameBoard[i].length; l++) {
-				logicList[i][l] = new AStarTile(GameBoard[i][l]);
-			}
-		}
 		init();
 	}
 
 	private void init() {
+		logicList = new AStarTile[rows][columns];
+		for (int i = 0; i < gameBoard.length; i++) {
+			for (int l = 0; l < gameBoard[i].length; l++) {
+				logicList[i][l] = new AStarTile(gameBoard[i][l]);
+			}
+		}
 		generateNeighbors();
+
 	}
 
 	/**
@@ -47,15 +49,16 @@ public class AStar {
 	 */
 	public List<SmartButton> getPath(SmartButton startPoint,
 			SmartButton endPoint) {
+
 		AStarTile start = logicList[startPoint.getRow()][startPoint.getColumn()];
 		AStarTile stop = logicList[endPoint.getRow()][endPoint.getColumn()];
+
 		for (int i = 0; i < rows; i++) {
 			for (int l = 0; l < columns; l++) {
 				logicList[i][l].setH(stop);
-				logicList[i][l]
-						.setSolid(gameBoard[i][l].state == TileState.COLLIDABLE);
 			}
 		}
+
 		openList = new ArrayList<AStarTile>();
 		ArrayList<AStarTile> path = new ArrayList<AStarTile>();
 		openList.add(start);
@@ -119,7 +122,15 @@ public class AStar {
 					&& currentPathIsShorter(currentNeighbors.get(k))) {
 				currentNeighbors.get(k).setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? 
 						currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+
+				// If a the considered tile will be a turn in the path, add a small cost.
+//				if (willTurn(currentNeighbors.get(k))){
+//					currentNeighbors.get(k).setG(currentNeighbors.get(k).getG() + 0.0002);
+//				}
+
 				currentNeighbors.get(k).setParent(currentTile);
+
+
 
 				// if a tile is open and the current paths g-value would be
 				// lower than its old g-value, we update the tiles g-value and
@@ -127,27 +138,31 @@ public class AStar {
 				// currentTile
 			} else if (currentNeighbors.get(k).isOpen()
 					&& currentPathIsShorter(currentNeighbors.get(k))) {
-				currentNeighbors
-						.get(k)
-						.setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? currentTile
-								.getG() + DIAGONALCOST : currentTile.getG() + 1);
+				currentNeighbors.get(k).setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? 
+						currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+
+				// If a the considered tile will be a turn in the path, add a small cost.
+//				if (willTurn(currentNeighbors.get(k))){
+//					currentNeighbors.get(k).setG(currentNeighbors.get(k).getG() + 0.0002);
+//				}
+
 				currentNeighbors.get(k).setParent(currentTile);
 
 				// if a tile is neither open nor closed, we add it the openList
 				// and update the open-value accordingly.
 			} else if (!currentNeighbors.get(k).isOpen()
 					&& !currentNeighbors.get(k).isClosed()) {
-				if (currentNeighbors.get(k).isSolid()) {
-					currentNeighbors.get(k).setClosed(true);
-				} else {
-					currentNeighbors.get(k).setOpen(true);
-					openList.add(currentNeighbors.get(k));
-					currentNeighbors.get(k).setParent(currentTile);
-					currentNeighbors.get(k)
-							.setG(currentTile.isDiagonal(currentNeighbors
-									.get(k)) ? currentTile.getG() + DIAGONALCOST
-									: currentTile.getG() + 1);
-				}
+				currentNeighbors.get(k).setOpen(true);
+				openList.add(currentNeighbors.get(k));
+				currentNeighbors.get(k).setParent(currentTile);
+				currentNeighbors.get(k).setG(currentTile.isDiagonal(currentNeighbors.get(k)) ? 
+						currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+
+				// If a the considered tile will be a turn in the path, add a small cost.
+//				if (willTurn(currentNeighbors.get(k))){
+//					currentNeighbors.get(k).setG(currentNeighbors.get(k).getG() + 0.0002);
+//				}
+
 			}
 		}
 	}
@@ -159,12 +174,23 @@ public class AStar {
 				: currentTile.getG() + 1);
 	}
 
+	private boolean willTurn(AStarTile consideredTile){
+		if (currentTile.getParent() != null){
+			return (currentTile.getParent().getColumn() - currentTile.getColumn() != currentTile.getColumn() - consideredTile.getColumn() 
+					|| currentTile.getParent().getRow() - currentTile.getRow() != currentTile.getRow() - consideredTile.getRow());
+		}
+		return false;
+
+	}
+
 	// Loops through gameboard and make sure every button calculates its
 	// neighbors
 	private void generateNeighbors() {
 		for (int i = 0; i < logicList.length; i++) {
 			for (int l = 0; l < logicList[i].length; l++) {
+				if (logicList[i][l].isSolid() == false){
 				calculateNeighbors(logicList[i][l]);
+				}
 			}
 		}
 	}
@@ -177,30 +203,67 @@ public class AStar {
 		int left = tile.getRow() - 1;
 
 		if (top < columns) {
-			tile.addNeighbor(logicList[tile.getRow()][top]);
+			if (isRelevant(tile,logicList[tile.getRow()][top])){
+				tile.addNeighbor(logicList[tile.getRow()][top]);
+			}
+
 			if (right < rows) {
-				tile.addNeighbor(logicList[right][top]);
+				if (isRelevant(tile, logicList[right][top])){
+					tile.addNeighbor(logicList[right][top]);
+				}
 			}
 			if (left >= 0) {
-				tile.addNeighbor(logicList[left][top]);
+				if (isRelevant(tile,logicList[left][top])){
+					tile.addNeighbor(logicList[left][top]);
+				}
 			}
 		}
 		if (buttom >= 0) {
-			tile.addNeighbor(logicList[tile.getRow()][buttom]);
+			if (isRelevant(tile,logicList[tile.getRow()][buttom])){
+				tile.addNeighbor(logicList[tile.getRow()][buttom]);
+			}
+
 			if (right < rows) {
-				tile.addNeighbor(logicList[right][buttom]);
+				if (isRelevant(tile,logicList[right][buttom])){
+					tile.addNeighbor(logicList[right][buttom]);
+				}
 			}
+
 			if (left >= 0) {
-				tile.addNeighbor(logicList[left][buttom]);
+				if (isRelevant(tile,logicList[left][buttom])){
+					System.out.println("Tile " + left + " " + buttom + "is relevant");
+					tile.addNeighbor(logicList[left][buttom]);
+				}
 			}
 		}
-		if (left >= 0) {
-			tile.addNeighbor(logicList[left][tile.getColumn()]);
+			if (left >= 0) {
+				if (isRelevant(tile,logicList[left][tile.getColumn()])){
+					tile.addNeighbor(logicList[left][tile.getColumn()]);
+				}
+			}
+			if (right < rows) {
+				if (isRelevant(tile,logicList[right][tile.getColumn()])){
+					tile.addNeighbor(logicList[right][tile.getColumn()]);
+				}
+			}
 		}
-		if (right < rows) {
-			tile.addNeighbor(logicList[right][tile.getColumn()]);
+	
+
+	/*
+	 * Checks if a certain tile should be added to the current Tiles list of neighbors
+	 * @return True if the considered tile is not a solid, and the path between the two tiles will not go through a wall.
+	 */
+	private boolean isRelevant(AStarTile currentTile, AStarTile consideredTile){
+		if (consideredTile.isSolid()){
+			return false;
+		}else{
+			int dx = consideredTile.getRow() - currentTile.getRow();
+			int dy = consideredTile.getColumn() - currentTile.getColumn();
+			return (!logicList[currentTile.getRow() + dx][currentTile.getColumn()].isSolid() && 
+					!logicList[currentTile.getRow()][currentTile.getColumn() + dy].isSolid());
 		}
 	}
+
 
 	// Removes a SmartButton from the open list
 	private void removeFromOpen(AStarTile tile) {
@@ -225,14 +288,12 @@ public class AStar {
 		for (int i = 0; i < openList.size(); i++) {
 			openList.remove(i);
 		}
-		System.out.println("Size: " + openList.size());
 	}
 
 	private List<SmartButton> convertList(List<AStarTile> path) {
 		List<SmartButton> returnList = new ArrayList<SmartButton>();
 		for (int i = 0; i < path.size(); i++) {
-			returnList.add(gameBoard[path.get(i).getRow()][path.get(i)
-					.getColumn()]);
+			returnList.add(gameBoard[path.get(i).getRow()][path.get(i).getColumn()]);
 		}
 		return returnList;
 	}

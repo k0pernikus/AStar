@@ -25,8 +25,8 @@ public class AStarTile {
 	public AStarTile(SmartButton toRepresent) {
 		this.row = toRepresent.getRow();
 		this.column = toRepresent.getColumn();
-		open = false;
-		closed = false;
+		this.open = false;
+		this.closed = false;
 		this.neighbors = new ArrayList<AStarTile>();
 
 		if (toRepresent.state == TileState.COLLIDABLE) {
@@ -89,8 +89,8 @@ public class AStarTile {
 
 	
 	public void setG(double g) {
-		if (this.h > 0) {
 			this.g = g;
+			if (this.h > 0) {
 			//Updates the value of F, since F is dependent on the constant value of h and G.
 			setF();
 		}

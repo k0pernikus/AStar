@@ -29,7 +29,6 @@ public class GameBoard extends JFrame implements ActionListener {
 	private SmartButton stop;
 	private SmartButton start;
 	LinePanel gridPanel;
-	private AStar pathfinder;
 
 	SmartButton[][] gameBoardState;
 
@@ -75,7 +74,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		gameBoardState = new SmartButton[rows][columns];
 		createButtons();
 
-		pathfinder = new AStar(gameBoardState, rows, columns);
+		
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.pack();
@@ -83,7 +82,7 @@ public class GameBoard extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new GameBoard(20, 20);
+		new GameBoard(20,20);
 	}
 
 	/**
@@ -120,8 +119,6 @@ public class GameBoard extends JFrame implements ActionListener {
 	 */
 	private void paintPath(List<SmartButton> path) {
 		for (int i = 0; i < path.size(); i++) {
-			System.out.println("Path: " + path.get(i).getRow() + " "
-					+ path.get(i).getColumn());
 
 		}
 		if (path.size() > 2) {
@@ -175,14 +172,19 @@ public class GameBoard extends JFrame implements ActionListener {
 				for (int l = 0; l < columns; l++) {
 					if (gameBoardState[i][l].state == TileState.REGULAR) {
 						gameBoardState[i][l].setBackground(Color.WHITE);
-						gameBoardState[i][l].state = TileState.REGULAR;
 					}
 
 				}
 			}
 			if (startPlaced && stopPlaced) {
-
+				AStar pathfinder = new AStar(gameBoardState, rows, columns);
 				List<SmartButton> path = pathfinder.getPath(start, stop);
+//				for (int i = 0; i < rows-1; i++){
+//					for (int l=0;i<columns-1;l++){
+//						System.out.println("Tile X: " + gameBoardState[i][l].getRow() + " Y: " + gameBoardState[i][l].getColumn() + "is " + gameBoardState[i][l].state.toString());
+//					}
+//				}
+				System.out.println("Tile ");
 				// If a path exists
 				if (path != null) {
 					paintPath(path);
@@ -199,6 +201,7 @@ public class GameBoard extends JFrame implements ActionListener {
 		/*
 		 * Accessed if the call is made from a button in the gridView.
 		 */
+		System.out.println(e.getActionCommand());
 		for (int i = 0; i < rows; i++) {
 			for (int l = 0; l < columns; l++) {
 				if (e.getActionCommand().equals(i + "," + l)) {
