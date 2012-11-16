@@ -45,7 +45,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
         // Initiate matrix for storing buttons
         gameBoardStates = new TileButtons[width][height];
-        createButtons();
+        this.createButtons();
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);

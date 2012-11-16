@@ -14,7 +14,7 @@ public class LinePanel extends JPanel {
 
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        Stroke stroke = new BasicStroke(Config.TILE_SIZE_IN_PIXEL/3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+        Stroke stroke = new BasicStroke(Config.TILE_SIZE_IN_PIXEL / 3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
         super.paint(g2);
 
         if (path.size() >= 2) {
