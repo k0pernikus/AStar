@@ -185,6 +185,7 @@ public class AStar {
                 }
             }
         }
+
         if (bottom >= 0) {
             if (isRelevant(tile, logicList[tile.getCoordinateX()][bottom])) {
                 tile.addNeighbor(logicList[tile.getCoordinateX()][bottom]);

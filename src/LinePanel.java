@@ -22,7 +22,6 @@ public class LinePanel extends JPanel {
                 g.drawLine(path.get(i).x, path.get(i).y, path.get(i + 1).x, path.get(i + 1).y);
             }
         }
-
     }
 
     public void addToPath(Point point) {
