@@ -115,8 +115,11 @@ public class AStar {
             // than its old g-value, we update the tiles g-value and sets it
             // parent to
             // currentTile
-            if (currentNeighbor.isClosed() && currentPathIsShorter(currentNeighbor)) {
-                currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+
+            int g = (int) (currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+
+            if (currentNeighbor.isClosed() && isCurrentPathShorter(currentNeighbor)) {
+                currentNeighbor.setG(g);
 
                 currentNeighbor.setParent(currentTile);
 
@@ -125,8 +128,8 @@ public class AStar {
                 // sets it parent to
                 // currentTile
             } else if (currentNeighbor.isOpen()
-                    && currentPathIsShorter(currentNeighbor)) {
-                currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+                    && isCurrentPathShorter(currentNeighbor)) {
+                currentNeighbor.setG(g);
                 currentNeighbor.setParent(currentTile);
 
                 // if a tile is neither open nor closed, we add it the openList
@@ -135,14 +138,14 @@ public class AStar {
                 currentNeighbor.setOpen(true);
                 openList.add(currentNeighbor);
                 currentNeighbor.setParent(currentTile);
-                currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+                currentNeighbor.setG(g);
             }
         }
     }
 
     // Given a SmartButton, will return whether or not the current path from the
     // start to the button is shorter than the currently recorded.
-    private boolean currentPathIsShorter(Tile tile) {
+    private boolean isCurrentPathShorter(Tile tile) {
         return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
     }
 
