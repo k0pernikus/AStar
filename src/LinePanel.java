@@ -32,5 +32,4 @@ public class LinePanel extends JPanel {
     public void clearPath() {
         this.path.clear();
     }
-
 }

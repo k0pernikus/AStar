@@ -107,8 +107,8 @@ public class GameBoard extends JFrame implements ActionListener {
         return this.columns;
     }
 
-    public SmartButton getSmartButton(int row, int column) {
-        return gameBoardState[row][column];
+    public SmartButton getSmartButton(int x, int y) {
+        return gameBoardState[x][y];
     }
 
     /**
@@ -124,9 +124,9 @@ public class GameBoard extends JFrame implements ActionListener {
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
-            for (int i = 0; i < path.size(); i++) {
+            for (SmartButton aPath : path) {
                 //Get center point of each element, add them to path in LinePanel
-                Rectangle place = path.get(i).getBounds();
+                Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
                 int y = place.y + place.height / 2;
                 gridPanel.addToPath(new Point(x, y));
@@ -157,9 +157,7 @@ public class GameBoard extends JFrame implements ActionListener {
                     gameBoardState[i][l].setText(null);
                     gameBoardState[i][l].setBackground(Color.WHITE);
                     gameBoardState[i][l].state = TileState.REGULAR;
-
                 }
-
             }
         } else if (e.getActionCommand().equals("exit")) {
             System.exit(0);
@@ -169,7 +167,6 @@ public class GameBoard extends JFrame implements ActionListener {
                     if (gameBoardState[i][l].state == TileState.REGULAR) {
                         gameBoardState[i][l].setBackground(Color.WHITE);
                     }
-
                 }
             }
             if (startPlaced && stopPlaced) {

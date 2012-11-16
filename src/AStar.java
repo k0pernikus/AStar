@@ -133,25 +133,16 @@ public class AStar {
                 // currentTile
             } else if (currentNeighbor.isOpen()
                     && currentPathIsShorter(currentNeighbor)) {
-                currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ?
-                        currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
-
-                // If a the considered tile will be a turn in the path, add a small cost.
-//				if (willTurn(currentNeighbors.get(k))){
-//					currentNeighbors.get(k).setG(currentNeighbors.get(k).getG() + 0.0002);
-//				}
-
+                currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
                 currentNeighbor.setParent(currentTile);
 
                 // if a tile is neither open nor closed, we add it the openList
                 // and update the open-value accordingly.
-            } else if (!currentNeighbor.isOpen()
-                    && !currentNeighbor.isClosed()) {
+            } else if (!currentNeighbor.isOpen() && !currentNeighbor.isClosed()) {
                 currentNeighbor.setOpen(true);
                 openList.add(currentNeighbor);
                 currentNeighbor.setParent(currentTile);
                 currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
-
             }
         }
     }
