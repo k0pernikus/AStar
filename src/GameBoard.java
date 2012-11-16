@@ -17,8 +17,10 @@ import java.util.List;
 public class GameBoard extends JFrame implements ActionListener {
     private int gameboardHeight;
     private int gameboardWidth;
+
     private boolean startPlaced;
     private boolean stopPlaced;
+
     private SmartButton stop;
     private SmartButton start;
     LinePanel gridPanel;
@@ -30,6 +32,7 @@ public class GameBoard extends JFrame implements ActionListener {
     public GameBoard(int width, int height) {
         this.gameboardHeight = height;
         this.gameboardWidth = width;
+
         startPlaced = false;
         stopPlaced = false;
 
@@ -145,7 +148,7 @@ public class GameBoard extends JFrame implements ActionListener {
             if (startPlaced && stopPlaced) {
                 AStar pathfinder = new AStar(this.gameBoardState, this.gameboardWidth, this.gameboardHeight);
                 List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
-				System.out.println("Tile");
+                System.out.println("Tile");
                 // If a path exists
                 if (path != null) {
                     paintPath(path);
@@ -160,51 +163,46 @@ public class GameBoard extends JFrame implements ActionListener {
 
 
 		/*
-		 * Accessed if the call is made from a button in the gridView.
+         * Accessed if the call is made from a button in the gridView.
 		 */
         System.out.println(e.getActionCommand());
-        for (int i = 0; i < gameboardWidth; i++) {
-            for (int l = 0; l < gameboardHeight; l++) {
-                if (e.getActionCommand().equals(i + "," + l)) {
-                    if (gameBoardState[i][l].state == TileState.REGULAR) {
-                        gameBoardState[i][l].setBackground(Color.BLACK);
-                        gameBoardState[i][l].state = TileState.COLLIDABLE;
 
-                    } else if (gameBoardState[i][l].state == TileState.COLLIDABLE) {
-                        if (!startPlaced) {
-                            gameBoardState[i][l].state = TileState.START;
-                            gameBoardState[i][l].setBackground(Color.GREEN);
-                            gameBoardState[i][l].setText("Start");
-                            startPlaced = true;
-                            start = gameBoardState[i][l];
-                        } else {
-                            gameBoardState[i][l].setBackground(Color.WHITE);
-                            gameBoardState[i][l].state = TileState.REGULAR;
-                        }
+        String[] coordinates = e.getActionCommand().split(",");
 
-                    } else if (gameBoardState[i][l].state == TileState.START) {
-                        if (!stopPlaced) {
-                            gameBoardState[i][l].state = TileState.STOP;
-                            gameBoardState[i][l].setText("stop");
-                            gameBoardState[i][l].setBackground(Color.BLUE);
-                            this.stop = gameBoardState[i][l];
-                            stopPlaced = true;
-                            startPlaced = false;
-                        } else {
-                            gameBoardState[i][l].setBackground(Color.WHITE);
-                            gameBoardState[i][l].state = TileState.REGULAR;
-                            gameBoardState[i][l].setText(null);
-                            startPlaced = false;
-                        }
+        int x = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
 
-                    } else if (gameBoardState[i][l].state == TileState.STOP) {
-                        gameBoardState[i][l].setText(null);
-                        gameBoardState[i][l].setBackground(Color.WHITE);
-                        gameBoardState[i][l].state = TileState.REGULAR;
-                        stopPlaced = false;
-                    }
-                }
+
+        SmartButton selectedTile = gameBoardState[x][y];
+
+        if (selectedTile.state == TileState.REGULAR) {
+            selectedTile.turnIntoWall();
+
+        } else if (selectedTile.state == TileState.COLLIDABLE) {
+            if (!startPlaced) {
+                selectedTile.turnIntoStartField();
+                startPlaced = true;
+                start = selectedTile;
+            } else {
+                selectedTile.setBackground(Color.WHITE);
+                selectedTile.state = TileState.REGULAR;
             }
+
+        } else if (selectedTile.state == TileState.START) {
+            if (!stopPlaced) {
+                selectedTile.turnIntoEndField();
+
+                this.stop = selectedTile;
+                stopPlaced = true;
+                startPlaced = false;
+            } else {
+                selectedTile.turnIntoStandardField();
+                startPlaced = false;
+            }
+
+        } else if (selectedTile.state == TileState.STOP) {
+            selectedTile.turnIntoStandardField();
+            stopPlaced = false;
         }
     }
 }

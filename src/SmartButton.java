@@ -19,11 +19,11 @@ public class SmartButton extends JButton {
 
     public SmartButton(int xCoordinate, int yCoordinate, ActionListener listener) {
         state = TileState.REGULAR;
-        setBackground(Color.WHITE);
-        this.setBorder(new LineBorder(Color.RED, 1));
+        setBackground(Color.LIGHT_GRAY);
+        this.setBorder(new LineBorder(Color.black, Config.LINE_WIDTH_IN_PIXEL));
         this.setOpaque(true);
         this.addActionListener(listener);
-        this.setPreferredSize(new Dimension(30, 30));
+        this.setPreferredSize(new Dimension(Config.TILE_SIZE_IN_PIXEL, Config.TILE_SIZE_IN_PIXEL));
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
@@ -35,5 +35,29 @@ public class SmartButton extends JButton {
 
     public int getCoordinateX() {
         return this.xCoordinate;
+    }
+
+    public void turnIntoWall() {
+        this.setBackground(Color.BLACK);
+        this.state = TileState.COLLIDABLE;
+    }
+
+    public void turnIntoStandardField() {
+        this.setBackground(Color.WHITE);
+        this.state = TileState.REGULAR;
+        this.setText(null);
+    }
+
+    public void turnIntoStartField() {
+        this.state = TileState.START;
+        this.setBackground(Color.GREEN);
+        this.setText("Start");
+
+    }
+
+    public void turnIntoEndField() {
+        this.state = TileState.STOP;
+        this.setText("stop");
+        this.setBackground(Color.BLUE);
     }
 }

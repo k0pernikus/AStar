@@ -10,27 +10,27 @@ import java.util.List;
  * @author
  */
 public class AStar {
-    private List<AStarTile> openList;
-    private AStarTile[][] logicList;
-    private AStarTile currentTile;
-    private SmartButton[][] gameBoard;
+    private List<Tile> openList;
+    private Tile[][] logicList;
+    private Tile currentTile;
+    private SmartButton[][] smartButtons;
     private final double DIAGONALCOST = 1.41421356;
 
-    private int columns;
-    private int rows;
+    private int height;
+    private int width;
 
-    public AStar(SmartButton[][] GameBoard, int rows, int columns) {
-        this.gameBoard = GameBoard;
-        this.columns = columns;
-        this.rows = rows;
+    public AStar(SmartButton[][] smartButtons, int width, int height) {
+        this.smartButtons = smartButtons;
+        this.height = height;
+        this.width = width;
         init();
     }
 
     private void init() {
-        logicList = new AStarTile[rows][columns];
-        for (int x = 0; x < gameBoard.length; x++) {
-            for (int y = 0; y < gameBoard[x].length; y++) {
-                logicList[x][y] = new AStarTile(gameBoard[x][y]);
+        logicList = new Tile[width][height];
+        for (int x = 0; x < smartButtons.length; x++) {
+            for (int y = 0; y < smartButtons[x].length; y++) {
+                logicList[x][y] = new Tile(smartButtons[x][y]);
             }
         }
         generateNeighbors();
@@ -47,17 +47,17 @@ public class AStar {
      */
     public List<SmartButton> getPath(SmartButton startPoint, SmartButton endPoint) {
 
-        AStarTile start = logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
-        AStarTile target = logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
+        Tile start = logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
+        Tile target = logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
 
-        for (int i = 0; i < rows; i++) {
-            for (int l = 0; l < columns; l++) {
+        for (int i = 0; i < width; i++) {
+            for (int l = 0; l < height; l++) {
                 logicList[i][l].setH(target);
             }
         }
 
-        openList = new ArrayList<AStarTile>();
-        ArrayList<AStarTile> path = new ArrayList<AStarTile>();
+        openList = new ArrayList<Tile>();
+        ArrayList<Tile> path = new ArrayList<Tile>();
         openList.add(start);
 
         while (!openList.isEmpty()) {
@@ -108,8 +108,8 @@ public class AStar {
      * it instead. Should the tile be neither closed nor open, the path to it
      * will be updated, and it will be added to the open list for consideration
      */
-    private void updateNeighbors(List<AStarTile> currentNeighbors) {
-        for (AStarTile currentNeighbor : currentNeighbors) {
+    private void updateNeighbors(List<Tile> currentNeighbors) {
+        for (Tile currentNeighbor : currentNeighbors) {
 
             // if a tile is closed and the current paths g-value would be lower
             // than its old g-value, we update the tiles g-value and sets it
@@ -142,19 +142,19 @@ public class AStar {
 
     // Given a SmartButton, will return whether or not the current path from the
     // start to the button is shorter than the currently recorded.
-    private boolean currentPathIsShorter(AStarTile tile) {
+    private boolean currentPathIsShorter(Tile tile) {
         return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
     }
 
-    private boolean willTurn(AStarTile consideredTile) {
+    private boolean willTurn(Tile consideredTile) {
         return currentTile.getParent() != null && (currentTile.getParent().getCoordinateY() - currentTile.getCoordinateY() != currentTile.getCoordinateY() - consideredTile.getCoordinateY() || currentTile.getParent().getCoordinateX() - currentTile.getCoordinateX() != currentTile.getCoordinateX() - consideredTile.getCoordinateX());
     }
 
     // Loops through gameboard and make sure every button calculates its
     // neighbors
     private void generateNeighbors() {
-        for (AStarTile[] aLogicList : logicList) {
-            for (AStarTile anALogicList : aLogicList) {
+        for (Tile[] aLogicList : logicList) {
+            for (Tile anALogicList : aLogicList) {
                 if (!anALogicList.isSolid()) {
                     calculateNeighbors(anALogicList);
                 }
@@ -163,18 +163,18 @@ public class AStar {
     }
 
     // Tells the specified button to calculate and add its neighbors.
-    private void calculateNeighbors(AStarTile tile) {
+    private void calculateNeighbors(Tile tile) {
         int top = tile.getCoordinateY() + 1;
         int bottom = tile.getCoordinateY() - 1;
         int right = tile.getCoordinateX() + 1;
         int left = tile.getCoordinateX() - 1;
 
-        if (top < columns) {
+        if (top < height) {
             if (isRelevant(tile, logicList[tile.getCoordinateX()][top])) {
                 tile.addNeighbor(logicList[tile.getCoordinateX()][top]);
             }
 
-            if (right < rows) {
+            if (right < width) {
                 if (isRelevant(tile, logicList[right][top])) {
                     tile.addNeighbor(logicList[right][top]);
                 }
@@ -190,7 +190,7 @@ public class AStar {
                 tile.addNeighbor(logicList[tile.getCoordinateX()][bottom]);
             }
 
-            if (right < rows) {
+            if (right < width) {
                 if (isRelevant(tile, logicList[right][bottom])) {
                     tile.addNeighbor(logicList[right][bottom]);
                 }
@@ -208,7 +208,7 @@ public class AStar {
                 tile.addNeighbor(logicList[left][tile.getCoordinateY()]);
             }
         }
-        if (right < rows) {
+        if (right < width) {
             if (isRelevant(tile, logicList[right][tile.getCoordinateY()])) {
                 tile.addNeighbor(logicList[right][tile.getCoordinateY()]);
             }
@@ -220,7 +220,7 @@ public class AStar {
      * Checks if a certain tile should be added to the current Tiles list of neighbors
      * @return True if the considered tile is not a solid, and the path between the two tiles will not go through a wall.
      */
-    private boolean isRelevant(AStarTile currentTile, AStarTile consideredTile) {
+    private boolean isRelevant(Tile currentTile, Tile consideredTile) {
         if (consideredTile.isSolid()) {
             return false;
         } else {
@@ -233,7 +233,7 @@ public class AStar {
 
 
     // Removes a SmartButton from the open list
-    private void removeFromOpen(AStarTile tile) {
+    private void removeFromOpen(Tile tile) {
         for (int i = 0; i < openList.size(); i++) {
             if (openList.get(i) == tile) {
                 openList.remove(i);
@@ -242,8 +242,8 @@ public class AStar {
     }
 
     public void clear() {
-        for (AStarTile[] aLogicList : logicList) {
-            for (AStarTile anALogicList : aLogicList) {
+        for (Tile[] aLogicList : logicList) {
+            for (Tile anALogicList : aLogicList) {
                 anALogicList.setOpen(false);
                 anALogicList.setClosed(false);
             }
@@ -258,10 +258,10 @@ public class AStar {
         }
     }
 
-    private List<SmartButton> convertList(List<AStarTile> path) {
+    private List<SmartButton> convertList(List<Tile> path) {
         List<SmartButton> returnList = new ArrayList<SmartButton>();
-        for (AStarTile aPath : path) {
-            returnList.add(gameBoard[aPath.getCoordinateX()][aPath.getCoordinateY()]);
+        for (Tile aPath : path) {
+            returnList.add(smartButtons[aPath.getCoordinateX()][aPath.getCoordinateY()]);
         }
         return returnList;
     }

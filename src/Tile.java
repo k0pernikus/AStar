@@ -3,15 +3,16 @@ import java.util.List;
 
 /**
  * Class for representing a tile from some Gameboard, in order to implement A*-algorithm.
- * All variables for the algorithm is stored within the AStarTile, only the.
+ * All variables for the algorithm is stored within the Tile, only the.
  *
  * @author jesperpersson
  */
-public class AStarTile {
+public class Tile {
 
     private double g;
     private double f;
     private double h;
+
     private boolean isClosed;
     private boolean isOpen;
 
@@ -19,15 +20,15 @@ public class AStarTile {
     private int coordinateX;
     private int coordinateY;
 
-    private AStarTile parent;
-    private List<AStarTile> neighbors;
+    private Tile parent;
+    private List<Tile> neighbors;
 
-    public AStarTile(SmartButton toRepresent) {
+    public Tile(SmartButton toRepresent) {
         this.coordinateX = toRepresent.getCoordinateX();
         this.coordinateY = toRepresent.getCoordinateY();
         this.isOpen = false;
         this.isClosed = false;
-        this.neighbors = new ArrayList<AStarTile>();
+        this.neighbors = new ArrayList<Tile>();
         this.isSolid = (toRepresent.state == TileState.COLLIDABLE);
     }
 
@@ -51,7 +52,7 @@ public class AStarTile {
         return this.g;
     }
 
-    public AStarTile getParent() {
+    public Tile getParent() {
         return this.parent;
     }
 
@@ -75,7 +76,7 @@ public class AStarTile {
         this.isClosed = value;
     }
 
-    public void setParent(AStarTile parent) {
+    public void setParent(Tile parent) {
         this.parent = parent;
     }
 
@@ -87,7 +88,7 @@ public class AStarTile {
         }
     }
 
-    public void setH(AStarTile targetTile) {
+    public void setH(Tile targetTile) {
         this.h = (Math.abs(this.coordinateX - targetTile.getCoordinateX()) + Math.abs(this.coordinateY - targetTile.getCoordinateY()));
     }
 
@@ -95,19 +96,19 @@ public class AStarTile {
         this.f = this.h + this.g;
     }
 
-    public void setSolid(boolean value) {
-        this.isSolid = value;
+    public void setSolid(boolean solidState) {
+        this.isSolid = solidState;
     }
 
-    public List<AStarTile> getNeighbors() {
+    public List<Tile> getNeighbors() {
         return neighbors;
     }
 
-    public void addNeighbor(AStarTile tile) {
+    public void addNeighbor(Tile tile) {
         neighbors.add(tile);
     }
 
-    public boolean isDiagonal(AStarTile tile) {
+    public boolean isDiagonal(Tile tile) {
         return (this.getCoordinateX() != tile.getCoordinateX() && this.getCoordinateY() != tile.getCoordinateY());
     }
 
