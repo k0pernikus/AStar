@@ -14,6 +14,7 @@ public class AStar {
     private Tile currentTile;
     private TileButtons[][] tileButtonses;
     private final double DIAGONALCOST = 1.41421356;
+    private final double NORMALCOST = 1;
 
     private int height;
     private int width;
@@ -112,8 +113,7 @@ public class AStar {
 
             // if a tile is closed and the current paths g-value would be lower
             // than its old g-value, we update the tiles g-value and sets it
-            // parent to
-            // currentTile
+            // parent to currentTile
 
             int g = (int) (currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
 
@@ -144,7 +144,7 @@ public class AStar {
     // Given a TileButtons, will return whether or not the current path from the
     // start to the button is shorter than the currently recorded.
     private boolean isCurrentPathShorter(Tile tile) {
-        return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
+        return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + NORMALCOST);
     }
 
     // Loops through gameboard and make sure every button calculates its

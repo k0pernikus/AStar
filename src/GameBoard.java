@@ -125,30 +125,10 @@ public class GameBoard extends JFrame implements ActionListener {
         // If the reset-button is pressed, the gameboard will be reset, all
         // buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the gridPanel will be erased.
         if (e.getActionCommand().equals("reset")) {
-            hasStartField = false;
-            hasTargetField = false;
-
-            stop = null;
-            start = null;
-
-            gridPanel.clearPath();
-
-            for (int i = 0; i < gameboardWidth; i++) {
-                for (int l = 0; l < gameboardHeight; l++) {
-                    gameBoardStates[i][l].turnIntoStandardField();
-                }
-            }
+            this.resetPresesd();
         } else if (e.getActionCommand().equals("exit")) {
             System.exit(0);
         } else if (e.getActionCommand().equals("findPath")) {
-            for (int i = 0; i < this.gameboardWidth; i++) {
-                for (int l = 0; l < this.gameboardHeight; l++) {
-                    if (gameBoardStates[i][l].state == TileState.REGULAR) {
-                        //gameBoardStates[i][l].setBackground(Color.WHITE);
-                    }
-                }
-            }
-
             if (hasStartField && hasTargetField) {
                 this.findPath();
             }
@@ -183,5 +163,23 @@ public class GameBoard extends JFrame implements ActionListener {
     private void toggleState(int x, int y) {
         TileButtons selectedTile = this.gameBoardStates[x][y];
         new SelectedButtonToggleHandler(this, selectedTile);
+    }
+
+    private void resetPresesd() {
+        hasStartField = false;
+        hasTargetField = false;
+
+        stop = null;
+        start = null;
+
+        gridPanel.clearPath();
+        gridPanel.repaint();
+
+        for (int i = 0; i < gameboardWidth; i++) {
+            for (int l = 0; l < gameboardHeight; l++) {
+                gameBoardStates[i][l].turnIntoStandardField();
+            }
+        }
+
     }
 }
