@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Class for representing a grid field of tiles, capable of finding paths
  * between tiles in the field.
  *
  * @author jesperpersson
- * @author
+ * @author k0pernikus
  */
 public class AStar {
     private List<Tile> openList;
@@ -127,8 +126,7 @@ public class AStar {
                 // lower than its old g-value, we update the tiles g-value and
                 // sets it parent to
                 // currentTile
-            } else if (currentNeighbor.isOpen()
-                    && isCurrentPathShorter(currentNeighbor)) {
+            } else if (currentNeighbor.isOpen() && isCurrentPathShorter(currentNeighbor)) {
                 currentNeighbor.setG(g);
                 currentNeighbor.setParent(currentTile);
 
@@ -147,10 +145,6 @@ public class AStar {
     // start to the button is shorter than the currently recorded.
     private boolean isCurrentPathShorter(Tile tile) {
         return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
-    }
-
-    private boolean willTurn(Tile consideredTile) {
-        return currentTile.getParent() != null && (currentTile.getParent().getCoordinateY() - currentTile.getCoordinateY() != currentTile.getCoordinateY() - consideredTile.getCoordinateY() || currentTile.getParent().getCoordinateX() - currentTile.getCoordinateX() != currentTile.getCoordinateX() - consideredTile.getCoordinateX());
     }
 
     // Loops through gameboard and make sure every button calculates its
