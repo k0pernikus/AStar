@@ -125,7 +125,7 @@ public class GameBoard extends JFrame implements ActionListener {
         // If the reset-button is pressed, the gameboard will be reset, all
         // buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the gridPanel will be erased.
         if (e.getActionCommand().equals("reset")) {
-            this.resetPresesd();
+            this.resetPressed();
         } else if (e.getActionCommand().equals("exit")) {
             System.exit(0);
         } else if (e.getActionCommand().equals("findPath")) {
@@ -165,7 +165,7 @@ public class GameBoard extends JFrame implements ActionListener {
         new SelectedButtonToggleHandler(this, selectedTile);
     }
 
-    private void resetPresesd() {
+    private void resetPressed() {
         hasStartField = false;
         hasTargetField = false;
 
