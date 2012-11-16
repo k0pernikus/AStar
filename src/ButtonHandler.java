@@ -12,11 +12,11 @@ public class ButtonHandler {
     private JPanel controlPanel;
 
     public ButtonHandler(GameBoard gameBoard, JPanel controlPanel){
+        this.gameBoard = gameBoard;
         this.controlPanel = controlPanel;
     }
 
     public void addButtons() {
-        // Creates buttons and to be placed in the control panel
         JButton findPath = new JButton("Find Path");
         findPath.setActionCommand("findPath");
         findPath.addActionListener(this.gameBoard);

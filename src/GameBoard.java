@@ -65,7 +65,6 @@ public class GameBoard extends JFrame implements ActionListener {
         JPanel controlPanel = new JPanel();
         controlPanel.setPreferredSize(new Dimension(this.rows * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
         this.add(controlPanel, BorderLayout.SOUTH);
-
         ButtonHandler btnHandler = new ButtonHandler(this, controlPanel);
         btnHandler.addButtons();
     }
@@ -158,16 +157,16 @@ public class GameBoard extends JFrame implements ActionListener {
         } else if (e.getActionCommand().equals("exit")) {
             System.exit(0);
         } else if (e.getActionCommand().equals("findPath")) {
-            for (int i = 0; i < rows; i++) {
-                for (int l = 0; l < columns; l++) {
+            for (int i = 0; i < this.rows; i++) {
+                for (int l = 0; l < this.columns; l++) {
                     if (gameBoardState[i][l].state == TileState.REGULAR) {
                         gameBoardState[i][l].setBackground(Color.WHITE);
                     }
                 }
             }
             if (startPlaced && stopPlaced) {
-                AStar pathfinder = new AStar(gameBoardState, rows, columns);
-                List<SmartButton> path = pathfinder.getPath(start, stop);
+                AStar pathfinder = new AStar(this.gameBoardState, this.rows, this.columns);
+                List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
 //				for (int i = 0; i < rows-1; i++){
 //					for (int l=0;i<columns-1;l++){
 //						System.out.println("Tile X: " + gameBoardState[i][l].getCoordinateX() + " Y: " + gameBoardState[i][l].getCoordinateY() + "is " + gameBoardState[i][l].state.toString());

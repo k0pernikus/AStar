@@ -44,8 +44,7 @@ public class AStar {
      * @param start
      * @return null if no path exists between Start and Stop
      */
-    public List<SmartButton> getPath(SmartButton startPoint,
-                                     SmartButton endPoint) {
+    public List<SmartButton> getPath(SmartButton startPoint, SmartButton endPoint) {
 
         AStarTile start = logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
         AStarTile target = logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
@@ -84,7 +83,6 @@ public class AStar {
         }
         clear();
         return null;
-
     }
 
     /* Returns the index of the tile in the open list with the lowest f-value */
@@ -97,6 +95,7 @@ public class AStar {
                 currentF = openList.get(i).getF();
             }
         }
+
         return pointer;
     }
 
@@ -118,13 +117,7 @@ public class AStar {
             if (currentNeighbor.isClosed() && currentPathIsShorter(currentNeighbor)) {
                 currentNeighbor.setG(currentTile.isDiagonal(currentNeighbor) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
 
-                // If a the considered tile will be a turn in the path, add a small cost.
-//				if (willTurn(currentNeighbors.get(k))){
-//					currentNeighbors.get(k).setG(currentNeighbors.get(k).getG() + 0.0002);
-//				}
-
                 currentNeighbor.setParent(currentTile);
-
 
                 // if a tile is open and the current paths g-value would be
                 // lower than its old g-value, we update the tiles g-value and
