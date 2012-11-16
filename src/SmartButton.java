@@ -26,6 +26,8 @@ public class SmartButton extends JButton {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
 
+        this.turnIntoStandardField();
+
         this.addActionListener(listener);
     }
 
