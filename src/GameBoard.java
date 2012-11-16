@@ -15,8 +15,8 @@ import java.util.List;
  */
 
 public class GameBoard extends JFrame implements ActionListener {
-    private int columns;
-    private int rows;
+    private int gameboardHeight;
+    private int gameboardWidth;
     private boolean startPlaced;
     private boolean stopPlaced;
     private SmartButton stop;
@@ -26,10 +26,10 @@ public class GameBoard extends JFrame implements ActionListener {
     SmartButton[][] gameBoardState;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
-    // of smartbuttons, the size set by the parameters rows and columns.
-    public GameBoard(int rows, int columns) {
-        this.columns = columns;
-        this.rows = rows;
+    // of smartbuttons, the size set by the parameters gameboardWidth and gameboardHeight.
+    public GameBoard(int width, int height) {
+        this.gameboardHeight = height;
+        this.gameboardWidth = width;
         startPlaced = false;
         stopPlaced = false;
 
@@ -40,7 +40,7 @@ public class GameBoard extends JFrame implements ActionListener {
         this.initControlPanel();
 
         // Initiate matrix for storing buttons
-        gameBoardState = new SmartButton[rows][columns];
+        gameBoardState = new SmartButton[width][height];
         createButtons();
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -50,7 +50,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
     private void initControlPanel() {
         JPanel controlPanel = new JPanel();
-        controlPanel.setPreferredSize(new Dimension(this.rows * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
+        controlPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
         this.add(controlPanel, BorderLayout.SOUTH);
         ButtonHandler btnHandler = new ButtonHandler(this, controlPanel);
         btnHandler.addButtons();
@@ -58,8 +58,8 @@ public class GameBoard extends JFrame implements ActionListener {
 
     private void initGameboardHoldingPanel() {
         gridPanel = new LinePanel();
-        gridPanel.setPreferredSize(new Dimension(this.rows * Config.TILE_SIZE_IN_PIXEL + 1, columns * Config.TILE_SIZE_IN_PIXEL));
-        gridPanel.setLayout(new GridLayout(this.rows, this.columns));
+        gridPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, gameboardHeight * Config.TILE_SIZE_IN_PIXEL));
+        gridPanel.setLayout(new GridLayout(this.gameboardWidth, this.gameboardHeight));
         this.add(gridPanel, BorderLayout.CENTER);
     }
 
@@ -72,8 +72,8 @@ public class GameBoard extends JFrame implements ActionListener {
      * the gridpanel
      */
     private void createButtons() {
-        for (int i = 0; i < rows; i++) {
-            for (int l = 0; l < columns; l++) {
+        for (int i = 0; i < gameboardWidth; i++) {
+            for (int l = 0; l < gameboardHeight; l++) {
                 gameBoardState[i][l] = new SmartButton(i, l, this);
                 gameBoardState[i][l].setActionCommand(i + "," + l);
                 gridPanel.add(gameBoardState[i][l]);
@@ -81,12 +81,12 @@ public class GameBoard extends JFrame implements ActionListener {
         }
     }
 
-    public int getRows() {
-        return this.rows;
+    public int getGameboardWidth() {
+        return this.gameboardWidth;
     }
 
-    public int getColumns() {
-        return this.columns;
+    public int getGameboardHeight() {
+        return this.gameboardHeight;
     }
 
     public SmartButton getSmartButton(int x, int y) {
@@ -114,12 +114,6 @@ public class GameBoard extends JFrame implements ActionListener {
         }
     }
 
-    private Point convertPosToTile(Point point) {
-        int y = point.y / this.rows;
-        int x = point.x / this.columns;
-        return new Point(x, y);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         // If the reset-button is pressed, the gameboard will be reset, all
@@ -131,8 +125,8 @@ public class GameBoard extends JFrame implements ActionListener {
             start = null;
             gridPanel.clearPath();
 
-            for (int i = 0; i < rows; i++) {
-                for (int l = 0; l < columns; l++) {
+            for (int i = 0; i < gameboardWidth; i++) {
+                for (int l = 0; l < gameboardHeight; l++) {
                     gameBoardState[i][l].setText(null);
                     gameBoardState[i][l].setBackground(Color.WHITE);
                     gameBoardState[i][l].state = TileState.REGULAR;
@@ -141,15 +135,15 @@ public class GameBoard extends JFrame implements ActionListener {
         } else if (e.getActionCommand().equals("exit")) {
             System.exit(0);
         } else if (e.getActionCommand().equals("findPath")) {
-            for (int i = 0; i < this.rows; i++) {
-                for (int l = 0; l < this.columns; l++) {
+            for (int i = 0; i < this.gameboardWidth; i++) {
+                for (int l = 0; l < this.gameboardHeight; l++) {
                     if (gameBoardState[i][l].state == TileState.REGULAR) {
                         gameBoardState[i][l].setBackground(Color.WHITE);
                     }
                 }
             }
             if (startPlaced && stopPlaced) {
-                AStar pathfinder = new AStar(this.gameBoardState, this.rows, this.columns);
+                AStar pathfinder = new AStar(this.gameBoardState, this.gameboardWidth, this.gameboardHeight);
                 List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
 				System.out.println("Tile");
                 // If a path exists
@@ -169,8 +163,8 @@ public class GameBoard extends JFrame implements ActionListener {
 		 * Accessed if the call is made from a button in the gridView.
 		 */
         System.out.println(e.getActionCommand());
-        for (int i = 0; i < rows; i++) {
-            for (int l = 0; l < columns; l++) {
+        for (int i = 0; i < gameboardWidth; i++) {
+            for (int l = 0; l < gameboardHeight; l++) {
                 if (e.getActionCommand().equals(i + "," + l)) {
                     if (gameBoardState[i][l].state == TileState.REGULAR) {
                         gameBoardState[i][l].setBackground(Color.BLACK);
