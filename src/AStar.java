@@ -8,7 +8,6 @@ import java.util.List;
  *
  * @author jesperpersson
  */
-
 public class AStar {
     private List<AStarTile> openList;
     private AStarTile[][] logicList;
@@ -28,9 +27,9 @@ public class AStar {
 
     private void init() {
         logicList = new AStarTile[rows][columns];
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int l = 0; l < gameBoard[i].length; l++) {
-                logicList[i][l] = new AStarTile(gameBoard[i][l]);
+        for (int x = 0; x < gameBoard.length; x++) {
+            for (int y = 0; y < gameBoard[x].length; y++) {
+                logicList[x][y] = new AStarTile(gameBoard[x][y]);
             }
         }
         generateNeighbors();
@@ -172,7 +171,7 @@ public class AStar {
     // Tells the specified button to calculate and add its neighbors.
     private void calculateNeighbors(AStarTile tile) {
         int top = tile.getCoordinateY() + 1;
-        int buttom = tile.getCoordinateY() - 1;
+        int bottom = tile.getCoordinateY() - 1;
         int right = tile.getCoordinateX() + 1;
         int left = tile.getCoordinateX() - 1;
 
@@ -192,21 +191,21 @@ public class AStar {
                 }
             }
         }
-        if (buttom >= 0) {
-            if (isRelevant(tile, logicList[tile.getCoordinateX()][buttom])) {
-                tile.addNeighbor(logicList[tile.getCoordinateX()][buttom]);
+        if (bottom >= 0) {
+            if (isRelevant(tile, logicList[tile.getCoordinateX()][bottom])) {
+                tile.addNeighbor(logicList[tile.getCoordinateX()][bottom]);
             }
 
             if (right < rows) {
-                if (isRelevant(tile, logicList[right][buttom])) {
-                    tile.addNeighbor(logicList[right][buttom]);
+                if (isRelevant(tile, logicList[right][bottom])) {
+                    tile.addNeighbor(logicList[right][bottom]);
                 }
             }
 
             if (left >= 0) {
-                if (isRelevant(tile, logicList[left][buttom])) {
-                    System.out.println("Tile " + left + " " + buttom + "is relevant");
-                    tile.addNeighbor(logicList[left][buttom]);
+                if (isRelevant(tile, logicList[left][bottom])) {
+                    System.out.println("Tile " + left + " " + bottom + "is relevant");
+                    tile.addNeighbor(logicList[left][bottom]);
                 }
             }
         }

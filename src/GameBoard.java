@@ -42,33 +42,13 @@ public class GameBoard extends JFrame implements ActionListener {
 
         this.setLayout(new BorderLayout());
 
-        // Initiates and specifies the panel holding the gameboard
-        gridPanel = new LinePanel();
-        gridPanel.setPreferredSize(new Dimension(rows * Config.TILE_SIZE_IN_PIXEL + 1, columns * Config.TILE_SIZE_IN_PIXEL));
-        gridPanel.setLayout(new GridLayout(rows, columns));
-        this.add(gridPanel, BorderLayout.CENTER);
+        this.initGameboardHoldingPanel();
+
 
         // Initiates and specifies the controlpanel.
-        JPanel controlPanel = new JPanel();
-        controlPanel.setPreferredSize(new Dimension(rows * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
-        this.add(controlPanel, BorderLayout.SOUTH);
+        this.initControlPanel();
 
-        // Creates buttons and to be placed in the control panel
 
-        JButton findPath = new JButton("Find Path");
-        findPath.setActionCommand("findPath");
-        findPath.addActionListener(this);
-        controlPanel.add(findPath);
-
-        JButton reset = new JButton("Reset");
-        reset.setActionCommand("reset");
-        reset.addActionListener(this);
-        controlPanel.add(reset);
-
-        JButton exit = new JButton("Exit");
-        exit.setActionCommand("exit");
-        exit.addActionListener(this);
-        controlPanel.add(exit);
 
         // Initiate matrix for storing buttons
         gameBoardState = new SmartButton[rows][columns];
@@ -79,6 +59,22 @@ public class GameBoard extends JFrame implements ActionListener {
         this.setVisible(true);
         this.pack();
 
+    }
+
+    private void initControlPanel() {
+        JPanel controlPanel = new JPanel();
+        controlPanel.setPreferredSize(new Dimension(this.rows * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
+        this.add(controlPanel, BorderLayout.SOUTH);
+
+        ButtonHandler btnHandler = new ButtonHandler(this, controlPanel);
+        btnHandler.addButtons();
+    }
+
+    private void initGameboardHoldingPanel() {
+        gridPanel = new LinePanel();
+        gridPanel.setPreferredSize(new Dimension(this.rows * Config.TILE_SIZE_IN_PIXEL + 1, columns * Config.TILE_SIZE_IN_PIXEL));
+        gridPanel.setLayout(new GridLayout(this.rows, this.columns));
+        this.add(gridPanel, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
