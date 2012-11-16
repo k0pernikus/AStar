@@ -111,8 +111,10 @@ public class GameBoard extends JFrame implements ActionListener {
                 Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
                 int y = place.y + place.height / 2;
+
                 gridPanel.addToPath(new Point(x, y));
             }
+
             gridPanel.repaint();
         }
     }
@@ -124,15 +126,15 @@ public class GameBoard extends JFrame implements ActionListener {
         if (e.getActionCommand().equals("reset")) {
             hasStartField = false;
             hasTargetField = false;
+
             stop = null;
             start = null;
+
             gridPanel.clearPath();
 
             for (int i = 0; i < gameboardWidth; i++) {
                 for (int l = 0; l < gameboardHeight; l++) {
-                    gameBoardStates[i][l].setText(null);
-                    gameBoardStates[i][l].setBackground(Color.WHITE);
-                    gameBoardStates[i][l].state = TileState.REGULAR;
+                    gameBoardStates[i][l].turnIntoStandardField();
                 }
             }
         } else if (e.getActionCommand().equals("exit")) {
@@ -141,22 +143,13 @@ public class GameBoard extends JFrame implements ActionListener {
             for (int i = 0; i < this.gameboardWidth; i++) {
                 for (int l = 0; l < this.gameboardHeight; l++) {
                     if (gameBoardStates[i][l].state == TileState.REGULAR) {
-                        gameBoardStates[i][l].setBackground(Color.WHITE);
+                        //gameBoardStates[i][l].setBackground(Color.WHITE);
                     }
                 }
             }
+
             if (hasStartField && hasTargetField) {
-                AStar pathfinder = new AStar(this.gameBoardStates, this.gameboardWidth, this.gameboardHeight);
-                List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
-                System.out.println("Tile");
-                // If a path exists
-                if (path != null) {
-                    paintPath(path);
-                }
-                // If no possible path was found
-                else {
-                    System.out.println("No path found ");
-                }
+                this.findPath();
             }
 
         }
@@ -172,37 +165,54 @@ public class GameBoard extends JFrame implements ActionListener {
         int x = Integer.parseInt(coordinates[0]);
         int y = Integer.parseInt(coordinates[1]);
 
+        this.toggleState(x, y);
+    }
 
-        SmartButton selectedTile = gameBoardStates[x][y];
+    private void findPath() {
+        AStar pathfinder = new AStar(this.gameBoardStates, this.gameboardWidth, this.gameboardHeight);
+        List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
+        System.out.println("Tile");
+        // If a path exists
+        if (path != null) {
+            paintPath(path);
+        }
+        // If no possible path was found
+        else {
+            System.out.println("No path found ");
+        }
+    }
 
+
+    private void toggleState(int x, int y) {
+        SmartButton selectedTile = this.gameBoardStates[x][y];
         if (selectedTile.state == TileState.REGULAR) {
             selectedTile.turnIntoWall();
 
         } else if (selectedTile.state == TileState.COLLIDABLE) {
-            if (!hasStartField) {
+            if (!this.hasStartField) {
                 selectedTile.turnIntoStartField();
-                hasStartField = true;
-                start = selectedTile;
-            } else {
-                selectedTile.setBackground(Color.WHITE);
-                selectedTile.state = TileState.REGULAR;
-            }
-
-        } else if (selectedTile.state == TileState.START) {
-            if (!hasTargetField) {
-                selectedTile.turnIntoEndField();
-
-                this.stop = selectedTile;
-                hasTargetField = true;
-                hasStartField = false;
+                this.hasStartField = true;
+                this.start = selectedTile;
             } else {
                 selectedTile.turnIntoStandardField();
-                hasStartField = false;
             }
 
-        } else if (selectedTile.state == TileState.STOP) {
-            selectedTile.turnIntoStandardField();
-            hasTargetField = false;
+        } else {
+            if (selectedTile.state == TileState.START) {
+                if (!hasTargetField) {
+                    selectedTile.turnIntoEndField();
+
+                    this.stop = selectedTile;
+                    hasTargetField = true;
+                    hasStartField = false;
+                } else {
+                    selectedTile.turnIntoStandardField();
+                    hasStartField = false;
+                }
+            } else if (selectedTile.state == TileState.STOP) {
+                selectedTile.turnIntoStandardField();
+                hasTargetField = false;
+            }
         }
     }
 }

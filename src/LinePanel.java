@@ -1,6 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +13,15 @@ public class LinePanel extends JPanel {
     }
 
     public void paint(Graphics g) {
-        super.paint(g);
+        Graphics2D g2 = (Graphics2D) g;
+        Stroke stroke = new BasicStroke(Config.TILE_SIZE_IN_PIXEL/3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
+        super.paint(g2);
+
         if (path.size() >= 2) {
-            g.setColor(Color.MAGENTA);
+            g2.setStroke(stroke);
+            g2.setPaint(Color.BLUE);
             for (int i = 0; i < path.size() - 1; i++) {
-                g.drawLine(path.get(i).x, path.get(i).y, path.get(i + 1).x, path.get(i + 1).y);
+                g2.drawLine(path.get(i).x, path.get(i).y, path.get(i + 1).x, path.get(i + 1).y);
             }
         }
     }
