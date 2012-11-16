@@ -21,12 +21,12 @@ public class GameBoard extends JFrame implements ActionListener {
     protected boolean hasStartField;
     protected boolean hasTargetField;
 
-    protected TileButtons stop;
-    protected TileButtons start;
+    protected TileButton stop;
+    protected TileButton start;
 
     LinePanel gridPanel;
 
-    TileButtons[][] gameBoardStates;
+    TileButton[][] gameBoardStates;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
     // of smartbuttons, the size set by the parameters gameboardWidth and gameboardHeight.
@@ -44,7 +44,7 @@ public class GameBoard extends JFrame implements ActionListener {
         this.initControlPanel();
 
         // Initiate matrix for storing buttons
-        gameBoardStates = new TileButtons[width][height];
+        gameBoardStates = new TileButton[width][height];
         this.createButtons();
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -78,7 +78,7 @@ public class GameBoard extends JFrame implements ActionListener {
     private void createButtons() {
         for (int x = 0; x < gameboardWidth; x++) {
             for (int y = 0; y < gameboardHeight; y++) {
-                gameBoardStates[x][y] = new TileButtons(x, y, this);
+                gameBoardStates[x][y] = new TileButton(x, y, this);
                 gameBoardStates[x][y].setActionCommand(x + "," + y);
                 gridPanel.add(gameBoardStates[x][y]);
             }
@@ -93,7 +93,7 @@ public class GameBoard extends JFrame implements ActionListener {
         return this.gameboardHeight;
     }
 
-    public TileButtons getSmartButton(int x, int y) {
+    public TileButton getSmartButton(int x, int y) {
         return gameBoardStates[x][y];
     }
 
@@ -103,11 +103,11 @@ public class GameBoard extends JFrame implements ActionListener {
      *
      * @param path
      */
-    private void paintPath(List<TileButtons> path) {
+    private void paintPath(List<TileButton> path) {
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
-            for (TileButtons aPath : path) {
+            for (TileButton aPath : path) {
                 //Get center point of each element, add them to path in LinePanel
                 Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
@@ -150,7 +150,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
     private void findPath() {
         AStar pathfinder = new AStar(this.gameBoardStates, this.gameboardWidth, this.gameboardHeight);
-        List<TileButtons> path = pathfinder.getPath(this.start, this.stop);
+        List<TileButton> path = pathfinder.getPath(this.start, this.stop);
         System.out.println("Tile");
 
         if (path != null) {
@@ -161,7 +161,7 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void toggleState(int x, int y) {
-        TileButtons selectedTile = this.gameBoardStates[x][y];
+        TileButton selectedTile = this.gameBoardStates[x][y];
         new SelectedButtonToggleHandler(this, selectedTile);
     }
 

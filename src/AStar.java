@@ -12,14 +12,14 @@ public class AStar {
     private List<Tile> openList;
     private Tile[][] logicList;
     private Tile currentTile;
-    private TileButtons[][] tileButtonses;
+    private TileButton[][] tileButtonses;
     private final double DIAGONALCOST = 1.41421356;
     private final double NORMALCOST = 1;
 
     private int height;
     private int width;
 
-    public AStar(TileButtons[][] tileButtonses, int width, int height) {
+    public AStar(TileButton[][] tileButtonses, int width, int height) {
         this.tileButtonses = tileButtonses;
         this.height = height;
         this.width = width;
@@ -45,7 +45,7 @@ public class AStar {
      * @param start
      * @return null if no path exists between Start and Stop
      */
-    public List<TileButtons> getPath(TileButtons startPoint, TileButtons endPoint) {
+    public List<TileButton> getPath(TileButton startPoint, TileButton endPoint) {
 
         Tile start = logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
         Tile target = logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
@@ -141,7 +141,7 @@ public class AStar {
         }
     }
 
-    // Given a TileButtons, will return whether or not the current path from the
+    // Given a TileButton, will return whether or not the current path from the
     // start to the button is shorter than the currently recorded.
     private boolean isCurrentPathShorter(Tile tile) {
         return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + NORMALCOST);
@@ -230,7 +230,7 @@ public class AStar {
     }
 
 
-    // Removes a TileButtons from the open list
+    // Removes a TileButton from the open list
     private void removeFromOpen(Tile tile) {
         for (int i = 0; i < openList.size(); i++) {
             if (openList.get(i) == tile) {
@@ -256,8 +256,8 @@ public class AStar {
         }
     }
 
-    private List<TileButtons> convertList(List<Tile> path) {
-        List<TileButtons> returnList = new ArrayList<TileButtons>();
+    private List<TileButton> convertList(List<Tile> path) {
+        List<TileButton> returnList = new ArrayList<TileButton>();
         for (Tile aPath : path) {
             returnList.add(tileButtonses[aPath.getCoordinateX()][aPath.getCoordinateY()]);
         }

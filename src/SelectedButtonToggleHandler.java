@@ -3,9 +3,9 @@
  */
 public class SelectedButtonToggleHandler {
     private GameBoard gameBoard;
-    private TileButtons selectedButton;
+    private TileButton selectedButton;
     
-    public SelectedButtonToggleHandler(GameBoard gameBoard, TileButtons selectedButton) {
+    public SelectedButtonToggleHandler(GameBoard gameBoard, TileButton selectedButton) {
         this.gameBoard = gameBoard;
         this.selectedButton = selectedButton;
         this.handleClick();

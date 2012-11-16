@@ -23,7 +23,7 @@ public class Tile {
     private Tile parent;
     private List<Tile> neighbors;
 
-    public Tile(TileButtons toRepresent) {
+    public Tile(TileButton toRepresent) {
         this.coordinateX = toRepresent.getCoordinateX();
         this.coordinateY = toRepresent.getCoordinateY();
         this.isOpen = false;
