@@ -1,12 +1,10 @@
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
- * Created with IntelliJ IDEA.
- * User: wolle
- * Date: 11/16/12
- * Time: 6:11 PM
- * To change this template use File | Settings | File Templates.
+ * @author k0pernikus
  */
+
 public class ButtonHandler {
     private GameBoard gameBoard;
     private JPanel controlPanel;

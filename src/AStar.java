@@ -7,6 +7,7 @@ import java.util.List;
  * between tiles in the field.
  *
  * @author jesperpersson
+ * @author
  */
 public class AStar {
     private List<AStarTile> openList;
@@ -264,5 +265,4 @@ public class AStar {
         }
         return returnList;
     }
-
 }

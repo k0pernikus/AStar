@@ -1,17 +1,10 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * Class for representing a gameboard of Smartbuttons. Containts a AStar-object
@@ -41,24 +34,18 @@ public class GameBoard extends JFrame implements ActionListener {
         stopPlaced = false;
 
         this.setLayout(new BorderLayout());
-
         this.initGameboardHoldingPanel();
-
 
         // Initiates and specifies the controlpanel.
         this.initControlPanel();
-
-
 
         // Initiate matrix for storing buttons
         gameBoardState = new SmartButton[rows][columns];
         createButtons();
 
-
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.pack();
-
     }
 
     private void initControlPanel() {
@@ -113,9 +100,6 @@ public class GameBoard extends JFrame implements ActionListener {
      * @param path
      */
     private void paintPath(List<SmartButton> path) {
-        for (int i = 0; i < path.size(); i++) {
-
-        }
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
@@ -167,12 +151,7 @@ public class GameBoard extends JFrame implements ActionListener {
             if (startPlaced && stopPlaced) {
                 AStar pathfinder = new AStar(this.gameBoardState, this.rows, this.columns);
                 List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
-//				for (int i = 0; i < rows-1; i++){
-//					for (int l=0;i<columns-1;l++){
-//						System.out.println("Tile X: " + gameBoardState[i][l].getCoordinateX() + " Y: " + gameBoardState[i][l].getCoordinateY() + "is " + gameBoardState[i][l].state.toString());
-//					}
-//				}
-                System.out.println("Tile ");
+				System.out.println("Tile");
                 // If a path exists
                 if (path != null) {
                     paintPath(path);
