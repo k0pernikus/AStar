@@ -11,13 +11,13 @@ import javax.swing.border.LineBorder;
  * @author jesperpersson
  */
 
-public class SmartButton extends JButton {
+public class TileButtons extends JButton {
     public TileState state;
     //The tiles place in the grid
     private int yCoordinate;
     private int xCoordinate;
 
-    public SmartButton(int xCoordinate, int yCoordinate, ActionListener listener) {
+    public TileButtons(int xCoordinate, int yCoordinate, ActionListener listener) {
         this.setBorder(new LineBorder(Color.black, Config.LINE_WIDTH_IN_PIXEL));
         this.setOpaque(true);
 

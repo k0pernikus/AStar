@@ -12,14 +12,14 @@ public class AStar {
     private List<Tile> openList;
     private Tile[][] logicList;
     private Tile currentTile;
-    private SmartButton[][] smartButtons;
+    private TileButtons[][] tileButtonses;
     private final double DIAGONALCOST = 1.41421356;
 
     private int height;
     private int width;
 
-    public AStar(SmartButton[][] smartButtons, int width, int height) {
-        this.smartButtons = smartButtons;
+    public AStar(TileButtons[][] tileButtonses, int width, int height) {
+        this.tileButtonses = tileButtonses;
         this.height = height;
         this.width = width;
         init();
@@ -27,9 +27,9 @@ public class AStar {
 
     private void init() {
         logicList = new Tile[width][height];
-        for (int x = 0; x < smartButtons.length; x++) {
-            for (int y = 0; y < smartButtons[x].length; y++) {
-                logicList[x][y] = new Tile(smartButtons[x][y]);
+        for (int x = 0; x < tileButtonses.length; x++) {
+            for (int y = 0; y < tileButtonses[x].length; y++) {
+                logicList[x][y] = new Tile(tileButtonses[x][y]);
             }
         }
         generateNeighbors();
@@ -44,7 +44,7 @@ public class AStar {
      * @param start
      * @return null if no path exists between Start and Stop
      */
-    public List<SmartButton> getPath(SmartButton startPoint, SmartButton endPoint) {
+    public List<TileButtons> getPath(TileButtons startPoint, TileButtons endPoint) {
 
         Tile start = logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
         Tile target = logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
@@ -141,7 +141,7 @@ public class AStar {
         }
     }
 
-    // Given a SmartButton, will return whether or not the current path from the
+    // Given a TileButtons, will return whether or not the current path from the
     // start to the button is shorter than the currently recorded.
     private boolean isCurrentPathShorter(Tile tile) {
         return tile.getG() > (currentTile.isDiagonal(tile) ? currentTile.getG() + DIAGONALCOST : currentTile.getG() + 1);
@@ -230,7 +230,7 @@ public class AStar {
     }
 
 
-    // Removes a SmartButton from the open list
+    // Removes a TileButtons from the open list
     private void removeFromOpen(Tile tile) {
         for (int i = 0; i < openList.size(); i++) {
             if (openList.get(i) == tile) {
@@ -256,10 +256,10 @@ public class AStar {
         }
     }
 
-    private List<SmartButton> convertList(List<Tile> path) {
-        List<SmartButton> returnList = new ArrayList<SmartButton>();
+    private List<TileButtons> convertList(List<Tile> path) {
+        List<TileButtons> returnList = new ArrayList<TileButtons>();
         for (Tile aPath : path) {
-            returnList.add(smartButtons[aPath.getCoordinateX()][aPath.getCoordinateY()]);
+            returnList.add(tileButtonses[aPath.getCoordinateX()][aPath.getCoordinateY()]);
         }
         return returnList;
     }

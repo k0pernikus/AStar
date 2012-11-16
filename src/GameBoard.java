@@ -15,17 +15,18 @@ import java.util.List;
  */
 
 public class GameBoard extends JFrame implements ActionListener {
-    private int gameboardHeight;
-    private int gameboardWidth;
+    protected int gameboardHeight;
+    protected int gameboardWidth;
 
-    private boolean hasStartField;
-    private boolean hasTargetField;
+    protected boolean hasStartField;
+    protected boolean hasTargetField;
 
-    private SmartButton stop;
-    private SmartButton start;
+    protected TileButtons stop;
+    protected TileButtons start;
+
     LinePanel gridPanel;
 
-    SmartButton[][] gameBoardStates;
+    TileButtons[][] gameBoardStates;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
     // of smartbuttons, the size set by the parameters gameboardWidth and gameboardHeight.
@@ -43,7 +44,7 @@ public class GameBoard extends JFrame implements ActionListener {
         this.initControlPanel();
 
         // Initiate matrix for storing buttons
-        gameBoardStates = new SmartButton[width][height];
+        gameBoardStates = new TileButtons[width][height];
         createButtons();
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -77,7 +78,7 @@ public class GameBoard extends JFrame implements ActionListener {
     private void createButtons() {
         for (int x = 0; x < gameboardWidth; x++) {
             for (int y = 0; y < gameboardHeight; y++) {
-                gameBoardStates[x][y] = new SmartButton(x, y, this);
+                gameBoardStates[x][y] = new TileButtons(x, y, this);
                 gameBoardStates[x][y].setActionCommand(x + "," + y);
                 gridPanel.add(gameBoardStates[x][y]);
             }
@@ -92,7 +93,7 @@ public class GameBoard extends JFrame implements ActionListener {
         return this.gameboardHeight;
     }
 
-    public SmartButton getSmartButton(int x, int y) {
+    public TileButtons getSmartButton(int x, int y) {
         return gameBoardStates[x][y];
     }
 
@@ -102,11 +103,11 @@ public class GameBoard extends JFrame implements ActionListener {
      *
      * @param path
      */
-    private void paintPath(List<SmartButton> path) {
+    private void paintPath(List<TileButtons> path) {
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
-            for (SmartButton aPath : path) {
+            for (TileButtons aPath : path) {
                 //Get center point of each element, add them to path in LinePanel
                 Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
@@ -151,7 +152,6 @@ public class GameBoard extends JFrame implements ActionListener {
             if (hasStartField && hasTargetField) {
                 this.findPath();
             }
-
         }
 
 
@@ -170,49 +170,18 @@ public class GameBoard extends JFrame implements ActionListener {
 
     private void findPath() {
         AStar pathfinder = new AStar(this.gameBoardStates, this.gameboardWidth, this.gameboardHeight);
-        List<SmartButton> path = pathfinder.getPath(this.start, this.stop);
+        List<TileButtons> path = pathfinder.getPath(this.start, this.stop);
         System.out.println("Tile");
-        // If a path exists
+
         if (path != null) {
             paintPath(path);
-        }
-        // If no possible path was found
-        else {
+        } else {
             System.out.println("No path found ");
         }
     }
 
-
     private void toggleState(int x, int y) {
-        SmartButton selectedTile = this.gameBoardStates[x][y];
-        if (selectedTile.state == TileState.REGULAR) {
-            selectedTile.turnIntoWall();
-
-        } else if (selectedTile.state == TileState.COLLIDABLE) {
-            if (!this.hasStartField) {
-                selectedTile.turnIntoStartField();
-                this.hasStartField = true;
-                this.start = selectedTile;
-            } else {
-                selectedTile.turnIntoStandardField();
-            }
-
-        } else {
-            if (selectedTile.state == TileState.START) {
-                if (!hasTargetField) {
-                    selectedTile.turnIntoEndField();
-
-                    this.stop = selectedTile;
-                    hasTargetField = true;
-                    hasStartField = false;
-                } else {
-                    selectedTile.turnIntoStandardField();
-                    hasStartField = false;
-                }
-            } else if (selectedTile.state == TileState.STOP) {
-                selectedTile.turnIntoStandardField();
-                hasTargetField = false;
-            }
-        }
+        TileButtons selectedTile = this.gameBoardStates[x][y];
+        new SelectedButtonToggleHandler(this, selectedTile);
     }
 }
