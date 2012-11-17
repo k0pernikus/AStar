@@ -17,15 +17,11 @@ import java.util.List;
 public class GameBoard extends JFrame implements ActionListener {
     protected int gameboardHeight;
     protected int gameboardWidth;
-
     protected boolean hasStartField;
     protected boolean hasTargetField;
-
     protected TileButton stop;
     protected TileButton start;
-
-    LinePanel gridPanel;
-
+    GridPanel gridPanel;
     TileButton[][] gameBoardStates;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
@@ -52,6 +48,10 @@ public class GameBoard extends JFrame implements ActionListener {
         this.pack();
     }
 
+    public static void main(String[] args) {
+        new GameBoard(Config.GAMEBOARD_WIDTH, Config.GAMEBOARD_HEIGHT);
+    }
+
     private void initControlPanel() {
         JPanel controlPanel = new JPanel();
         controlPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
@@ -61,14 +61,10 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void initGameboardHoldingPanel() {
-        gridPanel = new LinePanel();
+        gridPanel = new GridPanel();
         gridPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, gameboardHeight * Config.TILE_SIZE_IN_PIXEL));
         gridPanel.setLayout(new GridLayout(this.gameboardWidth, this.gameboardHeight));
         this.add(gridPanel, BorderLayout.CENTER);
-    }
-
-    public static void main(String[] args) {
-        new GameBoard(Config.GAMEBOARD_WIDTH, Config.GAMEBOARD_HEIGHT);
     }
 
     /**
@@ -85,18 +81,6 @@ public class GameBoard extends JFrame implements ActionListener {
         }
     }
 
-    public int getGameboardWidth() {
-        return this.gameboardWidth;
-    }
-
-    public int getGameboardHeight() {
-        return this.gameboardHeight;
-    }
-
-    public TileButton getSmartButton(int x, int y) {
-        return gameBoardStates[x][y];
-    }
-
     /**
      * Given a list of SmartButtons, will change the background of every tile in
      * the list
@@ -108,7 +92,7 @@ public class GameBoard extends JFrame implements ActionListener {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
             for (TileButton aPath : path) {
-                //Get center point of each element, add them to path in LinePanel
+                //Get center point of each element, add them to path in GridPanel
                 Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
                 int y = place.y + place.height / 2;

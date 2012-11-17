@@ -1,5 +1,5 @@
 /**
- * @author: k0pernikus
+ * @author k0pernikus
  */
 public class SelectedButtonToggleHandler {
     private GameBoard gameBoard;

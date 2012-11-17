@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-public class LinePanel extends JPanel {
+public class GridPanel extends JPanel {
 
     private List<Point> path;
 
-    public LinePanel() {
+    public GridPanel() {
         this.path = new ArrayList<Point>();
     }
 

@@ -13,7 +13,7 @@ import javax.swing.border.LineBorder;
 
 public class TileButton extends JButton {
     public TileState state;
-    //The tiles place in the grid
+
     private int yCoordinate;
     private int xCoordinate;
 
