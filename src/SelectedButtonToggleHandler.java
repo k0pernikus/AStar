@@ -38,7 +38,7 @@ public class SelectedButtonToggleHandler {
                     selectedButton.turnIntoStandardField();
                     gameBoard.hasStartField = false;
                 }
-            } else if (selectedButton.state == TileState.STOP) {
+            } else if (selectedButton.state == TileState.TARGET) {
                 selectedButton.turnIntoStandardField();
                 gameBoard.hasTargetField = false;
             }

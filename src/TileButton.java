@@ -55,7 +55,7 @@ public class TileButton extends JButton {
     }
 
     public void turnIntoEndField() {
-        this.state = TileState.STOP;
+        this.state = TileState.TARGET;
         this.setBackground(Color.BLUE);
     }
 }
