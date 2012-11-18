@@ -10,31 +10,33 @@ import java.util.List;
  */
 public class AStar {
     private List<Tile> openList;
-    private Tile[][] logicList;
+    private Tile[][] logicLists;
     private Tile currentTile;
-    private TileButton[][] tileButtonses;
-    private final double DIAGONALCOST = 1.41421356;
-    private final double NORMALCOST = 1;
+    private TileButton[][] tileButtons;
+
+    private final int DIAGONALCOST = 14;
+    private final int NORMALCOST = 10;
 
     private int height;
     private int width;
 
-    public AStar(TileButton[][] tileButtonses, int width, int height) {
-        this.tileButtonses = tileButtonses;
+    public AStar(TileButton[][] tileButtons, int width, int height) {
+        this.tileButtons = tileButtons;
         this.height = height;
         this.width = width;
+
         this.init();
     }
 
     private void init() {
-        this.logicList = new Tile[width][height];
-        for (int x = 0; x < this.tileButtonses.length; x++) {
-            for (int y = 0; y < this.tileButtonses[x].length; y++) {
-                this.logicList[x][y] = new Tile(tileButtonses[x][y]);
+        this.logicLists = new Tile[width][height];
+        for (int x = 0; x < this.tileButtons.length; x++) {
+            for (int y = 0; y < this.tileButtons[x].length; y++) {
+                this.logicLists[x][y] = new Tile(tileButtons[x][y]);
             }
         }
 
-        generateNeighbors();
+        this.generateNeighbors();
     }
 
     /**
@@ -43,18 +45,17 @@ public class AStar {
      * null-object
      */
     public List<TileButton> getPath(TileButton startPoint, TileButton endPoint) {
-
-        Tile start = this.logicList[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
-        Tile target = this.logicList[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
+        Tile start = this.logicLists[startPoint.getCoordinateX()][startPoint.getCoordinateY()];
+        Tile target = this.logicLists[endPoint.getCoordinateX()][endPoint.getCoordinateY()];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                this.logicList[x][y].setH(target);
+                this.logicLists[x][y].setH(target);
             }
         }
 
         this.openList = new ArrayList<Tile>();
-        ArrayList<Tile> path = new ArrayList<Tile>();
+        ArrayList<Tile> paths = new ArrayList<Tile>();
         this.openList.add(start);
 
         while (!this.openList.isEmpty()) {
@@ -63,13 +64,13 @@ public class AStar {
 
             // Algorithm complete and path found.
             if (this.currentTile.equals(target)) {
-                path.add(this.currentTile);
+                paths.add(this.currentTile);
                 while (this.currentTile != start) {
-                    path.add(this.currentTile.getParent());
+                    paths.add(this.currentTile.getParent());
                     this.currentTile = this.currentTile.getParent();
                 }
                 clear();
-                return convertList(path);
+                return convertList(paths);
 
                 // The goal was not found in the openList
             } else {
@@ -112,7 +113,7 @@ public class AStar {
             // than its old g-value, we update the tiles g-value and sets it
             // parent to currentTile
 
-            int g = (int) (this.currentTile.isDiagonal(currentNeighbor) ? (this.currentTile.getG() + DIAGONALCOST) : (currentTile.getG() + 1));
+            int g = (int) (this.currentTile.isDiagonal(currentNeighbor) ? (this.currentTile.getG() + DIAGONALCOST) : (currentTile.getG() + NORMALCOST));
 
             if (currentNeighbor.isClosed() && isCurrentPathShorter(currentNeighbor)) {
                 currentNeighbor.setG(g);
@@ -121,8 +122,7 @@ public class AStar {
 
                 // if a tile is open and the current paths g-value would be
                 // lower than its old g-value, we update the tiles g-value and
-                // sets it parent to
-                // currentTile
+                // sets it parent to currentTile
             } else if (currentNeighbor.isOpen() && isCurrentPathShorter(currentNeighbor)) {
                 currentNeighbor.setG(g);
                 currentNeighbor.setParent(this.currentTile);
@@ -147,7 +147,7 @@ public class AStar {
     // Loops through gameboard and make sure every button calculates its
     // neighbors
     private void generateNeighbors() {
-        for (Tile[] aLogicList : this.logicList) {
+        for (Tile[] aLogicList : this.logicLists) {
             for (Tile anALogicList : aLogicList) {
                 if (!anALogicList.isSolid()) {
                     calculateNeighbors(anALogicList);
@@ -164,48 +164,48 @@ public class AStar {
         int left = tile.getCoordinateX() - 1;
 
         if (top < height) {
-            if (isRelevant(tile, this.logicList[tile.getCoordinateX()][top])) {
-                tile.addNeighbor(this.logicList[tile.getCoordinateX()][top]);
+            if (isRelevant(tile, this.logicLists[tile.getCoordinateX()][top])) {
+                tile.addNeighbor(this.logicLists[tile.getCoordinateX()][top]);
             }
 
             if (right < width) {
-                if (isRelevant(tile, this.logicList[right][top])) {
-                    tile.addNeighbor(this.logicList[right][top]);
+                if (isRelevant(tile, this.logicLists[right][top])) {
+                    tile.addNeighbor(this.logicLists[right][top]);
                 }
             }
             if (left >= 0) {
-                if (isRelevant(tile, this.logicList[left][top])) {
-                    tile.addNeighbor(this.logicList[left][top]);
+                if (isRelevant(tile, this.logicLists[left][top])) {
+                    tile.addNeighbor(this.logicLists[left][top]);
                 }
             }
         }
 
         if (bottom >= 0) {
-            if (isRelevant(tile, this.logicList[tile.getCoordinateX()][bottom])) {
-                tile.addNeighbor(this.logicList[tile.getCoordinateX()][bottom]);
+            if (isRelevant(tile, this.logicLists[tile.getCoordinateX()][bottom])) {
+                tile.addNeighbor(this.logicLists[tile.getCoordinateX()][bottom]);
             }
 
             if (right < width) {
-                if (isRelevant(tile, this.logicList[right][bottom])) {
-                    tile.addNeighbor(this.logicList[right][bottom]);
+                if (isRelevant(tile, this.logicLists[right][bottom])) {
+                    tile.addNeighbor(this.logicLists[right][bottom]);
                 }
             }
 
             if (left >= 0) {
-                if (isRelevant(tile, this.logicList[left][bottom])) {
+                if (isRelevant(tile, this.logicLists[left][bottom])) {
                     System.out.println("Tile " + left + " " + bottom + "is relevant");
-                    tile.addNeighbor(this.logicList[left][bottom]);
+                    tile.addNeighbor(this.logicLists[left][bottom]);
                 }
             }
         }
         if (left >= 0) {
-            if (isRelevant(tile, this.logicList[left][tile.getCoordinateY()])) {
-                tile.addNeighbor(this.logicList[left][tile.getCoordinateY()]);
+            if (isRelevant(tile, this.logicLists[left][tile.getCoordinateY()])) {
+                tile.addNeighbor(this.logicLists[left][tile.getCoordinateY()]);
             }
         }
         if (right < width) {
-            if (isRelevant(tile, this.logicList[right][tile.getCoordinateY()])) {
-                tile.addNeighbor(this.logicList[right][tile.getCoordinateY()]);
+            if (isRelevant(tile, this.logicLists[right][tile.getCoordinateY()])) {
+                tile.addNeighbor(this.logicLists[right][tile.getCoordinateY()]);
             }
         }
     }
@@ -221,8 +221,8 @@ public class AStar {
         } else {
             int dx = consideredTile.getCoordinateX() - currentTile.getCoordinateX();
             int dy = consideredTile.getCoordinateY() - currentTile.getCoordinateY();
-            return (!logicList[currentTile.getCoordinateX() + dx][currentTile.getCoordinateY()].isSolid() &&
-                    !logicList[currentTile.getCoordinateX()][currentTile.getCoordinateY() + dy].isSolid());
+            return (!logicLists[currentTile.getCoordinateX() + dx][currentTile.getCoordinateY()].isSolid() &&
+                    !logicLists[currentTile.getCoordinateX()][currentTile.getCoordinateY() + dy].isSolid());
         }
     }
 
@@ -237,7 +237,7 @@ public class AStar {
     }
 
     public void clear() {
-        for (Tile[] aLogicList : this.logicList) {
+        for (Tile[] aLogicList : this.logicLists) {
             for (Tile anALogicList : aLogicList) {
                 anALogicList.setOpen(false);
                 anALogicList.setClosed(false);
@@ -253,10 +253,11 @@ public class AStar {
         }
     }
 
-    private List<TileButton> convertList(List<Tile> path) {
+    private List<TileButton> convertList(List<Tile> paths) {
         List<TileButton> returnList = new ArrayList<TileButton>();
-        for (Tile aPath : path) {
-            returnList.add(this.tileButtonses[aPath.getCoordinateX()][aPath.getCoordinateY()]);
+
+        for (Tile path : paths) {
+            returnList.add(this.tileButtons[path.getCoordinateX()][path.getCoordinateY()]);
         }
 
         return returnList;

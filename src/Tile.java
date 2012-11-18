@@ -3,15 +3,15 @@ import java.util.List;
 
 /**
  * Class for representing a tile from some Gameboard, in order to implement A*-algorithm.
- * All variables for the algorithm is stored within the Tile, only the.
+ * All variables for the algorithm is stored within the Tile
  *
  * @author jesperpersson
  */
 public class Tile {
 
-    private double g;
-    private double f;
-    private double h;
+    private int g;
+    private int f;
+    private int h;
 
     private boolean isClosed;
     private boolean isOpen;
@@ -23,13 +23,16 @@ public class Tile {
     private Tile parent;
     private List<Tile> neighbors;
 
-    public Tile(TileButton toRepresent) {
-        this.coordinateX = toRepresent.getCoordinateX();
-        this.coordinateY = toRepresent.getCoordinateY();
+    private TileButton button;
+
+    public Tile(TileButton Button) {
+        this.button = Button;
+        this.coordinateX = Button.getCoordinateX();
+        this.coordinateY = Button.getCoordinateY();
         this.isOpen = false;
         this.isClosed = false;
         this.neighbors = new ArrayList<Tile>();
-        this.isSolid = (toRepresent.state == TileState.COLLIDABLE);
+        this.isSolid = (Button.state == TileState.COLLIDABLE);
     }
 
     public int getCoordinateX() {
@@ -40,15 +43,19 @@ public class Tile {
         return this.coordinateY;
     }
 
-    public double getH() {
+    public int getH() {
         return this.h;
     }
 
-    public double getF() {
+    public int getF() {
+        System.out.println(this.f);
+
         return this.f;
     }
 
-    public double getG() {
+    public int getG() {
+        System.out.println(this.g);
+
         return this.g;
     }
 
@@ -81,7 +88,7 @@ public class Tile {
     }
 
 
-    public void setG(double g) {
+    public void setG(int g) {
         this.g = g;
         if (this.h > 0) {
             calculateF();
@@ -94,6 +101,8 @@ public class Tile {
 
     public void calculateF() {
         this.f = this.h + this.g;
+
+        button.setText("" + f);
     }
 
     public void setSolid(boolean solidState) {

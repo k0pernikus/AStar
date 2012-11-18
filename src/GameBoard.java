@@ -21,7 +21,7 @@ public class GameBoard extends JFrame implements ActionListener {
     protected boolean hasTargetField;
     protected TileButton stop;
     protected TileButton start;
-    GridPanel gridPanel;
+    LineDrawer lineDrawer;
     TileButton[][] gameBoardStates;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
@@ -61,10 +61,10 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void initGameboardHoldingPanel() {
-        gridPanel = new GridPanel();
-        gridPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, gameboardHeight * Config.TILE_SIZE_IN_PIXEL));
-        gridPanel.setLayout(new GridLayout(this.gameboardWidth, this.gameboardHeight));
-        this.add(gridPanel, BorderLayout.CENTER);
+        lineDrawer = new LineDrawer();
+        lineDrawer.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, gameboardHeight * Config.TILE_SIZE_IN_PIXEL));
+        lineDrawer.setLayout(new GridLayout(this.gameboardWidth, this.gameboardHeight));
+        this.add(lineDrawer, BorderLayout.CENTER);
     }
 
     /**
@@ -76,7 +76,7 @@ public class GameBoard extends JFrame implements ActionListener {
             for (int y = 0; y < gameboardHeight; y++) {
                 gameBoardStates[x][y] = new TileButton(x, y, this);
                 gameBoardStates[x][y].setActionCommand(x + "," + y);
-                gridPanel.add(gameBoardStates[x][y]);
+                lineDrawer.add(gameBoardStates[x][y]);
             }
         }
     }
@@ -92,22 +92,22 @@ public class GameBoard extends JFrame implements ActionListener {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
             for (TileButton aPath : path) {
-                //Get center point of each element, add them to path in GridPanel
+                //Get center point of each element, add them to path in LineDrawer
                 Rectangle place = aPath.getBounds();
                 int x = place.x + place.width / 2;
                 int y = place.y + place.height / 2;
 
-                gridPanel.addToPath(new Point(x, y));
+                lineDrawer.addToPath(new Point(x, y));
             }
 
-            gridPanel.repaint();
+            lineDrawer.repaint();
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // If the reset-button is pressed, the gameboard will be reset, all
-        // buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the gridPanel will be erased.
+        // buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the lineDrawer will be erased.
         if (e.getActionCommand().equals("reset")) {
             this.resetPressed();
         } else if (e.getActionCommand().equals("exit")) {
@@ -116,20 +116,16 @@ public class GameBoard extends JFrame implements ActionListener {
             if (hasStartField && hasTargetField) {
                 this.findPath();
             }
+        } else {
+            System.out.println(e.getActionCommand());
+
+            String[] coordinates = e.getActionCommand().split(",");
+
+            int x = Integer.parseInt(coordinates[0]);
+            int y = Integer.parseInt(coordinates[1]);
+
+            this.toggleState(x, y);
         }
-
-
-		/*
-         * Accessed if the call is made from a button in the gridView.
-		 */
-        System.out.println(e.getActionCommand());
-
-        String[] coordinates = e.getActionCommand().split(",");
-
-        int x = Integer.parseInt(coordinates[0]);
-        int y = Integer.parseInt(coordinates[1]);
-
-        this.toggleState(x, y);
     }
 
     private void findPath() {
@@ -156,14 +152,15 @@ public class GameBoard extends JFrame implements ActionListener {
         stop = null;
         start = null;
 
-        gridPanel.clearPath();
-        gridPanel.repaint();
+        lineDrawer.clearPath();
 
         for (int i = 0; i < gameboardWidth; i++) {
             for (int l = 0; l < gameboardHeight; l++) {
                 gameBoardStates[i][l].turnIntoStandardField();
             }
         }
+
+        lineDrawer.repaint();
 
     }
 }
