@@ -17,8 +17,6 @@ public class Tile {
     private boolean isOpen;
 
     private boolean isSolid;
-    private int coordinateX;
-    private int coordinateY;
 
     private Tile parent;
     private List<Tile> neighbors;
@@ -26,21 +24,20 @@ public class Tile {
     private TileButton button;
 
     public Tile(TileButton Button) {
-        this.button = Button;
-        this.coordinateX = Button.getCoordinateX();
-        this.coordinateY = Button.getCoordinateY();
-        this.isOpen = false;
-        this.isClosed = false;
         this.neighbors = new ArrayList<Tile>();
-        this.isSolid = (Button.state == TileState.COLLIDABLE);
+        this.button = Button;
+
+        this.setIsOpen(false);
+        this.setIsClosed(false);
+        this.setIsSolid(Button.state == TileState.WALL);
     }
 
     public int getCoordinateX() {
-        return this.coordinateX;
+        return this.button.getCoordinateX();
     }
 
     public int getCoordinateY() {
-        return this.coordinateY;
+        return this.button.getCoordinateY();
     }
 
     public int getH() {
@@ -48,7 +45,7 @@ public class Tile {
     }
 
     public int getF() {
-        System.out.println(this.f);
+        System.out.println("F =" + this.f);
 
         return this.f;
     }
@@ -75,11 +72,11 @@ public class Tile {
         return this.isSolid;
     }
 
-    public void setOpen(boolean value) {
+    public void setIsOpen(boolean value) {
         this.isOpen = value;
     }
 
-    public void setClosed(boolean value) {
+    public void setIsClosed(boolean value) {
         this.isClosed = value;
     }
 
@@ -90,22 +87,25 @@ public class Tile {
 
     public void setG(int g) {
         this.g = g;
-        if (this.h > 0) {
+        if (this.getH() > 0) {
             calculateF();
         }
     }
 
-    public void setH(Tile targetTile) {
-        this.h = (Math.abs(this.coordinateX - targetTile.getCoordinateX()) + Math.abs(this.coordinateY - targetTile.getCoordinateY()));
+    public void calculateH(Tile targetTile) {
+        this.h = (Math.abs(this.getCoordinateX() - targetTile.getCoordinateX()) + Math.abs(this.getCoordinateY() - targetTile.getCoordinateY()));
+        System.out.println(h);
     }
 
     public void calculateF() {
-        this.f = this.h + this.g;
+        this.f = this.getH() + this.getG();
+
+
 
         button.setText("" + f);
     }
 
-    public void setSolid(boolean solidState) {
+    public void setIsSolid(boolean solidState) {
         this.isSolid = solidState;
     }
 
@@ -121,4 +121,11 @@ public class Tile {
         return (this.getCoordinateX() != tile.getCoordinateX() && this.getCoordinateY() != tile.getCoordinateY());
     }
 
+    public void log() {
+//        System.out.print("-------------------" + "\n" +
+//                "G =" + this.getG() + "\n" +
+//                "H =" + this.getH() + "\n" +
+//                "F =" + this.getF() + "\n\n"
+//        );
+    }
 }

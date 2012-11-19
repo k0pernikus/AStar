@@ -14,10 +14,14 @@ import javax.swing.border.LineBorder;
 public class TileButton extends JButton {
     public TileState state;
 
+    private Tile tile;
+
     private int yCoordinate;
     private int xCoordinate;
 
     public TileButton(int xCoordinate, int yCoordinate, ActionListener listener) {
+        //this.tile = new Tile(this);
+
         this.setBorder(new LineBorder(Color.black, Config.LINE_WIDTH_IN_PIXEL));
         this.setOpaque(true);
 
@@ -41,12 +45,13 @@ public class TileButton extends JButton {
 
     public void turnIntoWall() {
         this.setBackground(Color.BLACK);
-        this.state = TileState.COLLIDABLE;
+        this.state = TileState.WALL;
     }
 
     public void turnIntoStandardField() {
         state = TileState.REGULAR;
         setBackground(Color.LIGHT_GRAY);
+        this.setText("");
     }
 
     public void turnIntoStartField() {
@@ -57,5 +62,9 @@ public class TileButton extends JButton {
     public void turnIntoEndField() {
         this.state = TileState.TARGET;
         this.setBackground(Color.BLUE);
+    }
+
+    public void setNeighbors() {
+
     }
 }

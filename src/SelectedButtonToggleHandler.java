@@ -14,7 +14,7 @@ public class SelectedButtonToggleHandler {
     private void handleClick() {
         if (selectedButton.state == TileState.REGULAR) {
             selectedButton.turnIntoWall();
-        } else if (selectedButton.state == TileState.COLLIDABLE) {
+        } else if (selectedButton.state == TileState.WALL) {
             if (!gameBoard.hasStartField) {
                 selectedButton.turnIntoStartField();
                 gameBoard.hasStartField = true;

@@ -1,5 +1,5 @@
 public enum TileState {
-    REGULAR, COLLIDABLE, START, TARGET
+    REGULAR, WALL, START, TARGET
 }
 
 

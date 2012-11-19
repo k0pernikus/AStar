@@ -22,7 +22,7 @@ public class GameBoard extends JFrame implements ActionListener {
     protected TileButton stop;
     protected TileButton start;
     LineDrawer lineDrawer;
-    TileButton[][] gameBoardStates;
+    TileButton[][] tileButtons;
 
     // Constructor, takes two ints for parameters. Will create a main gridview
     // of smartbuttons, the size set by the parameters gameboardWidth and gameboardHeight.
@@ -40,7 +40,7 @@ public class GameBoard extends JFrame implements ActionListener {
         this.initControlPanel();
 
         // Initiate matrix for storing buttons
-        gameBoardStates = new TileButton[width][height];
+        tileButtons = new TileButton[width][height];
         this.createButtons();
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -68,15 +68,15 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     /**
-     * Fills the matrix gameBoardStates with buttons, and adds each of them to
+     * Fills the matrix tileButtons with buttons, and adds each of them to
      * the gridpanel
      */
     private void createButtons() {
         for (int x = 0; x < gameboardWidth; x++) {
             for (int y = 0; y < gameboardHeight; y++) {
-                gameBoardStates[x][y] = new TileButton(x, y, this);
-                gameBoardStates[x][y].setActionCommand(x + "," + y);
-                lineDrawer.add(gameBoardStates[x][y]);
+                tileButtons[x][y] = new TileButton(x, y, this);
+                tileButtons[x][y].setActionCommand(x + "," + y);
+                lineDrawer.add(tileButtons[x][y]);
             }
         }
     }
@@ -129,7 +129,7 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void findPath() {
-        AStar pathfinder = new AStar(this.gameBoardStates, this.gameboardWidth, this.gameboardHeight);
+        AStar pathfinder = new AStar(this.tileButtons, this.gameboardWidth, this.gameboardHeight);
         List<TileButton> path = pathfinder.getPath(this.start, this.stop);
         System.out.println("Tile");
 
@@ -141,7 +141,7 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void toggleState(int x, int y) {
-        TileButton selectedTile = this.gameBoardStates[x][y];
+        TileButton selectedTile = this.tileButtons[x][y];
         new SelectedButtonToggleHandler(this, selectedTile);
     }
 
@@ -156,7 +156,7 @@ public class GameBoard extends JFrame implements ActionListener {
 
         for (int i = 0; i < gameboardWidth; i++) {
             for (int l = 0; l < gameboardHeight; l++) {
-                gameBoardStates[i][l].turnIntoStandardField();
+                tileButtons[i][l].turnIntoStandardField();
             }
         }
 
