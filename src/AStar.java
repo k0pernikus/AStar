@@ -35,6 +35,7 @@ public class AStar {
             for (TileButton button : buttons) {
                 Tile tile = button.getTile();
                 tile.findNeighbours(tileButtons);
+                button.setText(button.getCoordinateX() + " " + button.getCoordinateY());
             }
         }
 
@@ -50,6 +51,22 @@ public class AStar {
 
 
     public List<TileButton> getPath(TileButton start, TileButton target) {
+        TileButton pathEntry = getTileWithLowestFScore(start, target);
+
         return path;
+    }
+
+    public TileButton getTileWithLowestFScore(TileButton currentTile, TileButton target) {
+        List<Tile> neighbors = currentTile.getTile().getNeighbors();
+
+        for (Tile tile : neighbors) {
+            tile.calculateH(target.getTile());
+        }
+
+        for (Tile tile : neighbors) {
+            System.out.println(tile.getF());
+        }
+
+        return target;
     }
 }

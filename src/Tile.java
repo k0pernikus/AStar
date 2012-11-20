@@ -107,10 +107,6 @@ public class Tile {
         return neighbors;
     }
 
-    public void addNeighbor(Tile tile) {
-        neighbors.add(tile);
-    }
-
     public boolean isDiagonal(Tile tile) {
         return (this.getCoordinateX() != tile.getCoordinateX() && this.getCoordinateY() != tile.getCoordinateY());
     }
@@ -118,7 +114,6 @@ public class Tile {
     public void findNeighbours(TileButton[][] tileButtons) {
         this.getCoordinateY();
         this.getCoordinateX();
-
 
         int counter = 0;
 
