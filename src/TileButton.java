@@ -20,8 +20,6 @@ public class TileButton extends JButton {
     private int xCoordinate;
 
     public TileButton(int xCoordinate, int yCoordinate, ActionListener listener) {
-        //this.tile = new Tile(this);
-
         this.setBorder(new LineBorder(Color.black, Config.LINE_WIDTH_IN_PIXEL));
         this.setOpaque(true);
 
@@ -31,9 +29,10 @@ public class TileButton extends JButton {
         this.yCoordinate = yCoordinate;
 
         this.turnIntoStandardField();
-
         this.addActionListener(listener);
         this.setActionCommand(xCoordinate + "," + yCoordinate);
+
+        this.tile = new Tile(this);
     }
 
     public int getCoordinateY() {
@@ -67,7 +66,11 @@ public class TileButton extends JButton {
         this.setText("end");
     }
 
-    public void setNeighbors() {
+    public Tile getTile() {
+        return tile;
+    }
 
+    public void setTile(Tile tile) {
+        this.tile = tile;
     }
 }

@@ -115,11 +115,40 @@ public class Tile {
         return (this.getCoordinateX() != tile.getCoordinateX() && this.getCoordinateY() != tile.getCoordinateY());
     }
 
+    public void findNeighbours(TileButton[][] tileButtons) {
+        this.getCoordinateY();
+        this.getCoordinateX();
+
+
+        int counter = 0;
+
+        for (int xNeighbor = -1; xNeighbor<=1; xNeighbor++) {
+            for (int yNeighbor = -1; yNeighbor <= 1; yNeighbor++) {
+                if ((xNeighbor == 0) && (yNeighbor == 0)) { continue;}
+
+                int xdiff = this.getCoordinateX() + xNeighbor;
+                int ydiff = this.getCoordinateY() + yNeighbor;
+
+                try {
+                    TileButton neighbor = tileButtons[xdiff][ydiff];
+                    this.neighbors.add(neighbor.getTile());
+
+                }catch (ArrayIndexOutOfBoundsException e){
+                    System.out.println("That is the end of the gameboard.");
+                }
+           }
+        }
+
+        System.out.println(counter);
+    }
+
     public void log() {
-//        System.out.print("-------------------" + "\n" +
+        System.out.print("-------------------" + "\n" +
+                "x =" + this.getCoordinateX() + "\n" +
+                "y =" + this.getCoordinateY() + "\n");
 //                "G =" + this.getG() + "\n" +
 //                "H =" + this.getH() + "\n" +
-//                "F =" + this.getF() + "\n\n"
-//        );
+//                "F =" + this.getF() + "\n\n
+
     }
 }

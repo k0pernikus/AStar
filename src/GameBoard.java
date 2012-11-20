@@ -19,7 +19,7 @@ public class GameBoard extends JFrame implements ActionListener {
     protected int gameboardWidth;
     protected boolean hasStartField;
     protected boolean hasTargetField;
-    protected TileButton stop;
+    protected TileButton target;
     protected TileButton start;
     LineDrawer lineDrawer;
     TileButton[][] tileButtons;
@@ -89,7 +89,7 @@ public class GameBoard extends JFrame implements ActionListener {
     private void paintPath(List<TileButton> path) {
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
-            // last element in order to keep look on start/stop-buttons intact.
+            // last element in order to keep look on start/target-buttons intact.
             for (TileButton tileButton : path) {
                 //Get center point of each element, add them to path in LineDrawer
                 Rectangle place = tileButton.getBounds();
@@ -106,7 +106,7 @@ public class GameBoard extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // If the reset-button is pressed, the gameboard will be reset, all
-        // buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the lineDrawer will be erased.
+        // buttons changed to regular and white, start and target will be marked as unexisting, and any paths in the lineDrawer will be erased.
         if (e.getActionCommand().equals("reset")) {
             this.resetPressed();
         } else if (e.getActionCommand().equals("exit")) {
@@ -116,7 +116,7 @@ public class GameBoard extends JFrame implements ActionListener {
                 this.findPath();
             }
         } else {
-            System.out.println(e.getActionCommand());
+            //System.out.println(e.getActionCommand());
 
             String[] coordinates = e.getActionCommand().split(",");
 
@@ -129,10 +129,10 @@ public class GameBoard extends JFrame implements ActionListener {
 
     private void findPath() {
         AStar pathfinder = new AStar(this.tileButtons, this.gameboardWidth, this.gameboardHeight);
-        List<TileButton> path = pathfinder.getPath(this.start, this.stop);
-        System.out.println("Tile");
+        List<TileButton> path = pathfinder.getPath(this.start, this.target);
+        //System.out.println("Tile");
 
-        if (path != null) {
+        if (!path.isEmpty()) {
             paintPath(path);
         } else {
             System.out.println("No path found ");
@@ -148,7 +148,7 @@ public class GameBoard extends JFrame implements ActionListener {
         hasStartField = false;
         hasTargetField = false;
 
-        stop = null;
+        target = null;
         start = null;
 
         lineDrawer.clearPath();
@@ -159,7 +159,7 @@ public class GameBoard extends JFrame implements ActionListener {
             }
         }
 
+        lineDrawer.validate();
         lineDrawer.repaint();
-
     }
 }

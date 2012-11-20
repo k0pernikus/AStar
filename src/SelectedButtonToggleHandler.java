@@ -22,7 +22,7 @@ public class SelectedButtonToggleHandler {
             } else if (!gameBoard.hasTargetField) {
                 selectedButton.turnIntoEndField();
                 gameBoard.hasTargetField = true;
-                gameBoard.stop = selectedButton;
+                gameBoard.target = selectedButton;
             } else {
                 selectedButton.turnIntoStandardField();
             }
@@ -31,7 +31,7 @@ public class SelectedButtonToggleHandler {
                 if (!gameBoard.hasTargetField) {
                     selectedButton.turnIntoEndField();
 
-                    gameBoard.stop = selectedButton;
+                    gameBoard.target = selectedButton;
                     gameBoard.hasTargetField = true;
                     gameBoard.hasStartField = false;
                 } else {
