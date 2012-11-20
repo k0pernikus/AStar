@@ -79,7 +79,7 @@ public class AStar {
                     paths.add(this.currentTile.getParent());
                     this.currentTile = this.currentTile.getParent();
                 }
-                //clear();
+                clear();
                 return convertList(paths);
 
                 // The goal was not found in the openList
@@ -92,6 +92,7 @@ public class AStar {
         }
         clear();
         return null;
+
     }
 
     /* Returns the index of the tile in the open list with the lowest f-value */

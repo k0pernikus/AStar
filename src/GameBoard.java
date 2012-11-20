@@ -75,7 +75,6 @@ public class GameBoard extends JFrame implements ActionListener {
         for (int x = 0; x < gameboardWidth; x++) {
             for (int y = 0; y < gameboardHeight; y++) {
                 tileButtons[x][y] = new TileButton(x, y, this);
-                tileButtons[x][y].setActionCommand(x + "," + y);
                 lineDrawer.add(tileButtons[x][y]);
             }
         }
@@ -91,9 +90,9 @@ public class GameBoard extends JFrame implements ActionListener {
         if (path.size() > 2) {
             // Starting from second element and stopping one before reaching the
             // last element in order to keep look on start/stop-buttons intact.
-            for (TileButton aPath : path) {
+            for (TileButton tileButton : path) {
                 //Get center point of each element, add them to path in LineDrawer
-                Rectangle place = aPath.getBounds();
+                Rectangle place = tileButton.getBounds();
                 int x = place.x + place.width / 2;
                 int y = place.y + place.height / 2;
 

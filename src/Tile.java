@@ -87,22 +87,16 @@ public class Tile {
 
     public void setG(int g) {
         this.g = g;
-        if (this.getH() > 0) {
-            calculateF();
-        }
+        calculateF();
     }
 
     public void calculateH(Tile targetTile) {
         this.h = (Math.abs(this.getCoordinateX() - targetTile.getCoordinateX()) + Math.abs(this.getCoordinateY() - targetTile.getCoordinateY()));
-        System.out.println(h);
     }
 
     public void calculateF() {
         this.f = this.getH() + this.getG();
-
-
-
-        button.setText("" + f);
+        this.button.setText("" +f);
     }
 
     public void setIsSolid(boolean solidState) {

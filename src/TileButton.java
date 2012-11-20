@@ -33,6 +33,7 @@ public class TileButton extends JButton {
         this.turnIntoStandardField();
 
         this.addActionListener(listener);
+        this.setActionCommand(xCoordinate + "," + yCoordinate);
     }
 
     public int getCoordinateY() {
@@ -56,12 +57,14 @@ public class TileButton extends JButton {
 
     public void turnIntoStartField() {
         this.state = TileState.START;
+        this.setText("Start");
         this.setBackground(Color.GREEN);
     }
 
     public void turnIntoEndField() {
         this.state = TileState.TARGET;
         this.setBackground(Color.BLUE);
+        this.setText("end");
     }
 
     public void setNeighbors() {
