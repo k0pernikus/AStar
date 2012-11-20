@@ -67,12 +67,21 @@ public class AStar {
             }
         }
 
+        Tile lowestScore = null;
+
         for (Tile tile : neighbors) {
+            lowestScore = tile;
+
+            if (lowestScore.getF() > tile.getF()) {
+                lowestScore = tile;
+            }
+
+
             System.out.println("H = " + tile.getH() + "\n");
             System.out.println("G = " + tile.getG() + "\n");
             System.out.println("F = " + tile.getF() + "\n");
         }
 
-        return targetButton;
+        return lowestScore.getTileButton();
     }
 }
