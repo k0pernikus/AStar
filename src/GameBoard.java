@@ -116,8 +116,6 @@ public class GameBoard extends JFrame implements ActionListener {
                 this.findPath();
             }
         } else {
-            //System.out.println(e.getActionCommand());
-
             String[] coordinates = e.getActionCommand().split(",");
 
             int x = Integer.parseInt(coordinates[0]);
@@ -128,8 +126,16 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void findPath() {
-        AStar pathfinder = new AStar(this.tileButtons);
-        List<TileButton> path = pathfinder.getPath(this.start, this.target);
+        AStar pathfinder = new AStar(this, this.tileButtons);
+
+        TileButton start = this.start;
+        TileButton target = this.target;
+
+        System.out.println("start");
+        start.getTile().log();
+        System.out.println("target");
+        target.getTile().log();
+        List<TileButton> path = pathfinder.getPath(start, target);
 
         if (!path.isEmpty()) {
             paintPath(path);

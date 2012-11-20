@@ -12,9 +12,11 @@ import javax.swing.border.LineBorder;
  */
 
 public class TileButton extends JButton {
-    public TileState state;
+    private TileState state;
 
     private Tile tile;
+
+    private boolean hasBeenWalked;
 
     private int yCoordinate;
     private int xCoordinate;
@@ -45,23 +47,23 @@ public class TileButton extends JButton {
 
     public void turnIntoWall() {
         this.setBackground(Color.BLACK);
-        this.state = TileState.WALL;
+        this.setState(TileState.WALL);
     }
 
     public void turnIntoStandardField() {
-        state = TileState.REGULAR;
+        setState(TileState.REGULAR);
         setBackground(Color.LIGHT_GRAY);
-        this.setText("");
+        this.setText("" + this.getCoordinateX() + ", " +this.getCoordinateY());
     }
 
     public void turnIntoStartField() {
-        this.state = TileState.START;
+        this.setState(TileState.START);
         this.setText("Start");
         this.setBackground(Color.GREEN);
     }
 
     public void turnIntoEndField() {
-        this.state = TileState.TARGET;
+        this.setState(TileState.TARGET);
         this.setBackground(Color.BLUE);
         this.setText("end");
     }
@@ -72,5 +74,25 @@ public class TileButton extends JButton {
 
     public void setTile(Tile tile) {
         this.tile = tile;
+    }
+
+    public boolean isWall() {
+        return this.getState() == TileState.WALL;
+    }
+
+    public TileState getState() {
+        return state;
+    }
+
+    public void setState(TileState state) {
+        this.state = state;
+    }
+
+    public boolean hasBeenWalked() {
+        return hasBeenWalked;
+    }
+
+    public void setHasBeenWalked(boolean hasBeenWalked) {
+        this.hasBeenWalked = hasBeenWalked;
     }
 }

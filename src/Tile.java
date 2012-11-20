@@ -29,7 +29,7 @@ public class Tile {
 
         this.setIsOpen(false);
         this.setIsClosed(false);
-        this.setIsSolid(tileButton.state == TileState.WALL);
+        this.setIsSolid(tileButton.isWall());
     }
 
     public int getCoordinateX() {
@@ -109,7 +109,7 @@ public class Tile {
 
     public void calculateGcost(Tile target) {
         if (isDiagonal(target)) {
-            this.setG(14);
+            this.setG(10);
         } else {
             this.setG(10);
         }
@@ -130,8 +130,9 @@ public class Tile {
 
                 try {
                     TileButton neighbor = tileButtons[xdiff][ydiff];
-                    this.neighbors.add(neighbor.getTile());
-
+                    if(!neighbor.isWall()) {
+                        this.neighbors.add(neighbor.getTile());
+                    }
                 }catch (ArrayIndexOutOfBoundsException e){
                     System.out.println("That is the end of the gameboard.");
                 }
@@ -142,13 +143,13 @@ public class Tile {
     }
 
     public void log() {
-//        System.out.print("-------------------" + "\n" +
-//                "x =" + this.getCoordinateX() + "\n" +
-//                "y =" + this.getCoordinateY() + "\n");
+        System.out.print("-------------------" + "\n" +
+                "x =" + this.getCoordinateX() + "\n" +
+                "y =" + this.getCoordinateY() + "\n");
 //                "G =" + this.getG() + "\n" +
 //                "H =" + this.getH() + "\n" +
 //                "F =" + this.getF() + "\n\n
-
+//
     }
 
     public void setTileButton(TileButton button) {
@@ -158,4 +159,5 @@ public class Tile {
     public TileButton getTileButton() {
         return this.tileButton;
     }
+
 }

@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,10 @@ public class AStar {
     private List<Tile> openList;
     private List<TileButton> path;
     private TileButton[][] tileButtons;
+    private GameBoard gameboard;
 
-    public AStar(TileButton[][] tileButtons) {
-
+    public AStar(GameBoard gameBoard, TileButton[][] tileButtons) {
+        this.gameboard = gameBoard;
         this.tileButtons = tileButtons;
         this.path = new ArrayList<TileButton>();
         this.init();
@@ -24,65 +26,71 @@ public class AStar {
         for (TileButton[] buttons : tileButtons) {
             for (TileButton button : buttons) {
                 Tile tile = button.getTile();
-                tile.findNeighbours(tileButtons);
-
-                if (button.state == TileState.WALL) {
+                if (button.isWall()) {
                     tile.setIsSolid(true);
                 }
-
             }
         }
 
-        TileButton tileButton  = tileButtons[0][1];
-        System.out.println(tileButton.getTile().getNeighbors().size());
-        for (Tile tile : tileButton.getTile().getNeighbors()) {
-           tile.log();
+        for (TileButton[] buttons : tileButtons) {
+            for (TileButton button : buttons) {
+                Tile tile = button.getTile();
+                tile.findNeighbours(tileButtons);
+            }
         }
-        System.out.println("__________\n");
     }
 
     public List<TileButton> getPath(TileButton startButton, TileButton target) {
         TileButton pathEntry = startButton;
+        path.add(pathEntry);
         while (pathEntry != target) {
             pathEntry = getTileWithLowestFScore(pathEntry, target);
-            path.add(pathEntry);
+            if (!path.contains(pathEntry)) {
+                path.add(pathEntry);
+            }
         }
-
         return path;
     }
 
     public TileButton getTileWithLowestFScore(TileButton currentTileButton, TileButton targetButton) {
+        System.out.println("target:" +  + targetButton.getCoordinateY());
         List<Tile> neighbors = currentTileButton.getTile().getNeighbors();
 
         for (Tile tile : neighbors) {
-            if (!tile.isClosed()) {
-                tile.calculateH(targetButton.getTile());
-                tile.calculateGcost(currentTileButton.getTile());
-                tile.calculateF();
-            }
+            tile.calculateH(targetButton.getTile());
+            tile.calculateGcost(currentTileButton.getTile());
+            tile.calculateF();
+
+            tile.getTileButton().setText("" + tile.getF());
         }
 
         Tile lowestScore = null;
 
         for (Tile tile : neighbors) {
-            if (tile.isClosed()) { continue;}
-
             lowestScore = tile;
 
-            if (lowestScore.getF() < tile.getF() && !tile.isSolid()) {
-                lowestScore = tile;
+            if (lowestScore.getF() < tile.getF()) {
+                if(!tile.getTileButton().isWall()) {
+                    lowestScore = tile;
+                }
             }
-            System.out.println("------");
-            System.out.println("H = " + tile.getH());
-            System.out.println("G = " + tile.getG());
-            System.out.println("F = " + tile.getF());
-            System.out.println("------");
-
+//            System.out.println("------");
+//            System.out.println("" + tile.getCoordinateX() + "," + tile.getCoordinateY());
+//            System.out.println("isWall " + tile.getTileButton().isWall());
+//            System.out.println("isSolid" + tile.isSolid());
+//            System.out.println("H = " + tile.getH());
+//            System.out.println("G = " + tile.getG());
+//            System.out.println("F = " + tile.getF());
+//            System.out.println("------");
         }
 
-        System.out.println("Lowest Score:" + lowestScore.getF());
+        System.out.println("Lowest Score:" + lowestScore.getCoordinateX() + lowestScore.getCoordinateY() + lowestScore.getF());
 
         assert null != lowestScore;
+        lowestScore.getTileButton().setBackground(Color.cyan);
+        gameboard.validate();
+        gameboard.repaint();
+
         return lowestScore.getTileButton();
     }
 }
