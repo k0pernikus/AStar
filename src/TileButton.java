@@ -32,7 +32,7 @@ public class TileButton extends JButton {
         this.addActionListener(listener);
         this.setActionCommand(xCoordinate + "," + yCoordinate);
 
-        this.tile = new Tile(this);
+        this.setTile(new Tile(this));
     }
 
     public int getCoordinateY() {

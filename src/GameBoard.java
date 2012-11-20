@@ -130,7 +130,6 @@ public class GameBoard extends JFrame implements ActionListener {
     private void findPath() {
         AStar pathfinder = new AStar(this.tileButtons, this.gameboardWidth, this.gameboardHeight);
         List<TileButton> path = pathfinder.getPath(this.start, this.target);
-        //System.out.println("Tile");
 
         if (!path.isEmpty()) {
             paintPath(path);

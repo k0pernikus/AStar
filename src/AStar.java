@@ -56,17 +56,23 @@ public class AStar {
         return path;
     }
 
-    public TileButton getTileWithLowestFScore(TileButton currentTile, TileButton target) {
-        List<Tile> neighbors = currentTile.getTile().getNeighbors();
+    public TileButton getTileWithLowestFScore(TileButton currentTileButton, TileButton targetButton) {
+        List<Tile> neighbors = currentTileButton.getTile().getNeighbors();
 
         for (Tile tile : neighbors) {
-            tile.calculateH(target.getTile());
+            if (!tile.isClosed()) {
+                tile.calculateH(targetButton.getTile());
+                tile.calculateGcost(currentTileButton.getTile());
+                tile.calculateF();
+            }
         }
 
         for (Tile tile : neighbors) {
-            System.out.println(tile.getF());
+            System.out.println("H = " + tile.getH() + "\n");
+            System.out.println("G = " + tile.getG() + "\n");
+            System.out.println("F = " + tile.getF() + "\n");
         }
 
-        return target;
+        return targetButton;
     }
 }
