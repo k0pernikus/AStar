@@ -50,8 +50,12 @@ public class AStar {
 
 
 
-    public List<TileButton> getPath(TileButton start, TileButton target) {
-        TileButton pathEntry = getTileWithLowestFScore(start, target);
+    public List<TileButton> getPath(TileButton startButton, TileButton target) {
+        TileButton pathEntry = startButton;
+        while (pathEntry != target) {
+            pathEntry = getTileWithLowestFScore(pathEntry, target);
+            path.add(pathEntry);
+        }
 
         return path;
     }
@@ -72,16 +76,20 @@ public class AStar {
         for (Tile tile : neighbors) {
             lowestScore = tile;
 
-            if (lowestScore.getF() > tile.getF()) {
+            if (lowestScore.getF() < tile.getF()) {
                 lowestScore = tile;
             }
+            System.out.println("------");
+            System.out.println("H = " + tile.getH());
+            System.out.println("G = " + tile.getG());
+            System.out.println("F = " + tile.getF());
+            System.out.println("------");
 
-
-            System.out.println("H = " + tile.getH() + "\n");
-            System.out.println("G = " + tile.getG() + "\n");
-            System.out.println("F = " + tile.getF() + "\n");
         }
 
+        System.out.println("Lowest Score:" + lowestScore.getF());
+
+        assert lowestScore != null;
         return lowestScore.getTileButton();
     }
 }

@@ -49,8 +49,6 @@ public class Tile {
     }
 
     public int getG() {
-        System.out.println(this.g);
-
         return this.g;
     }
 
@@ -144,9 +142,9 @@ public class Tile {
     }
 
     public void log() {
-        System.out.print("-------------------" + "\n" +
-                "x =" + this.getCoordinateX() + "\n" +
-                "y =" + this.getCoordinateY() + "\n");
+//        System.out.print("-------------------" + "\n" +
+//                "x =" + this.getCoordinateX() + "\n" +
+//                "y =" + this.getCoordinateY() + "\n");
 //                "G =" + this.getG() + "\n" +
 //                "H =" + this.getH() + "\n" +
 //                "F =" + this.getF() + "\n\n
