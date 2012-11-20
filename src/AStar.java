@@ -45,10 +45,7 @@ public class AStar {
            tile.log();
         }
         System.out.println("__________\n");
-
     }
-
-
 
     public List<TileButton> getPath(TileButton startButton, TileButton target) {
         TileButton pathEntry = startButton;
@@ -74,6 +71,8 @@ public class AStar {
         Tile lowestScore = null;
 
         for (Tile tile : neighbors) {
+            if (tile.isClosed()) { continue;}
+
             lowestScore = tile;
 
             if (lowestScore.getF() < tile.getF()) {
@@ -89,7 +88,7 @@ public class AStar {
 
         System.out.println("Lowest Score:" + lowestScore.getF());
 
-        assert lowestScore != null;
+        assert null != lowestScore;
         return lowestScore.getTileButton();
     }
 }
