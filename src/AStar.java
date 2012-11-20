@@ -11,19 +11,9 @@ import java.util.List;
 public class AStar {
     private List<Tile> openList;
     private List<TileButton> path;
-    private Tile[] tiles;
     private TileButton[][] tileButtons;
-    private Tile currentTile;
 
-    private final int DIAGONALCOST;
-    private final int NORMALCOST;
-
-    private int height;
-    private int width;
-
-    public AStar(TileButton[][] tileButtons, int width, int height) {
-        DIAGONALCOST = 14;
-        NORMALCOST = 10;
+    public AStar(TileButton[][] tileButtons) {
 
         this.tileButtons = tileButtons;
         this.path = new ArrayList<TileButton>();
@@ -35,7 +25,11 @@ public class AStar {
             for (TileButton button : buttons) {
                 Tile tile = button.getTile();
                 tile.findNeighbours(tileButtons);
-                button.setText(button.getCoordinateX() + " " + button.getCoordinateY());
+
+                if (button.state == TileState.WALL) {
+                    tile.setIsSolid(true);
+                }
+
             }
         }
 
@@ -75,7 +69,7 @@ public class AStar {
 
             lowestScore = tile;
 
-            if (lowestScore.getF() < tile.getF()) {
+            if (lowestScore.getF() < tile.getF() && !tile.isSolid()) {
                 lowestScore = tile;
             }
             System.out.println("------");

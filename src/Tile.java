@@ -92,7 +92,7 @@ public class Tile {
 
     public void calculateF() {
         this.f = this.getH() + this.getG();
-        this.tileButton.setText("" + f);
+        //this.tileButton.setText("" + f);
     }
 
     public void setIsSolid(boolean solidState) {
