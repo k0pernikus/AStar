@@ -148,21 +148,6 @@ public class GameBoard extends JFrame implements ActionListener {
     }
 
     private void resetPressed() {
-        hasStartField = false;
-        hasTargetField = false;
-
-        target = null;
-        start = null;
-
-        lineDrawer.clearPath();
-
-        for (int i = 0; i < gameboardWidth; i++) {
-            for (int l = 0; l < gameboardHeight; l++) {
-                tileButtons[i][l].turnIntoStandardField();
-            }
-        }
-
-        lineDrawer.validate();
-        lineDrawer.repaint();
+        new GameBoard(Config.GAMEBOARD_WIDTH, Config.GAMEBOARD_HEIGHT);
     }
 }

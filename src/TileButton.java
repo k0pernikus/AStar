@@ -53,7 +53,7 @@ public class TileButton extends JButton {
     public void turnIntoStandardField() {
         setState(TileState.REGULAR);
         setBackground(Color.LIGHT_GRAY);
-        this.setText("" + this.getCoordinateX() + ", " + this.getCoordinateY());
+//        this.setText("" + this.getCoordinateX() + ", " + this.getCoordinateY());
     }
 
     public void turnIntoStartField() {

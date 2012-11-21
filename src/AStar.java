@@ -49,10 +49,6 @@ public class AStar {
         while (pathEntry != target) {
             pathEntry = getTileWithLowestFScore(pathEntry, target);
             path.add(pathEntry);
-
-            if (counter++ == 10000) {
-                break;
-            }
         }
 
         return path;
@@ -74,13 +70,12 @@ public class AStar {
         for (Tile neighbor : neighbors) {
             if (neighbor.isOpen()) {
                 lowestScore = neighbor;
-            } else {
-                System.out.println("dafuq");
             }
 
         }
 
         for (Tile tile : neighbors) {
+            assert lowestScore != null;
             if (lowestScore.getF() > tile.getF() && tile.isOpen()) {
                 lowestScore = tile;
             }
