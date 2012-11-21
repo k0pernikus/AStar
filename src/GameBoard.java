@@ -36,13 +36,11 @@ public class GameBoard extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.initGameboardHoldingPanel();
 
-        // Initiates and specifies the controlpanel.
-        this.initControlPanel();
+          this.initControlPanel();
 
         // Initiate matrix for storing buttons
-        tileButtons = new TileButton[width][height];
+        tileButtons = new TileButton[gameboardHeight][gameboardWidth];
         this.createButtons();
-
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.pack();

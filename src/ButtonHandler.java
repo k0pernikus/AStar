@@ -9,7 +9,7 @@ public class ButtonHandler {
     private GameBoard gameBoard;
     private JPanel controlPanel;
 
-    public ButtonHandler(GameBoard gameBoard, JPanel controlPanel){
+    public ButtonHandler(GameBoard gameBoard, JPanel controlPanel) {
         this.gameBoard = gameBoard;
         this.controlPanel = controlPanel;
     }

@@ -43,36 +43,37 @@ public class AStar {
     public List<TileButton> getPath(TileButton startButton, TileButton target) {
         TileButton pathEntry = startButton;
         path.add(pathEntry);
+
+        int counter = 0;
         while (pathEntry != target) {
             pathEntry = getTileWithLowestFScore(pathEntry, target);
             if (!path.contains(pathEntry)) {
                 path.add(pathEntry);
             }
+
+            if (counter++ == 10) {
+                break;
+            }
+
         }
         return path;
     }
 
     public TileButton getTileWithLowestFScore(TileButton currentTileButton, TileButton targetButton) {
-        System.out.println("target:" +  + targetButton.getCoordinateY());
+        System.out.println("target:" + targetButton.getCoordinateX() + targetButton.getCoordinateY());
         List<Tile> neighbors = currentTileButton.getTile().getNeighbors();
-
-        for (Tile tile : neighbors) {
-            tile.calculateH(targetButton.getTile());
-            tile.calculateGcost(currentTileButton.getTile());
-            tile.calculateF();
-
-            tile.getTileButton().setText("" + tile.getF());
+        for (Tile neighbor : neighbors) {
+            neighbor.calculateH(targetButton.getTile());
+            neighbor.calculateGcost(currentTileButton.getTile());
+            neighbor.calculateF();
+            neighbor.getTileButton().setText("" + neighbor.getF());
+            System.out.println("F: " + neighbor.getF());
         }
 
-        Tile lowestScore = null;
-
+        Tile lowestScore = neighbors.get(0);
         for (Tile tile : neighbors) {
-            lowestScore = tile;
-
-            if (lowestScore.getF() < tile.getF()) {
-                if(!tile.getTileButton().isWall()) {
-                    lowestScore = tile;
-                }
+            if (lowestScore.getF() > tile.getF()) {
+                lowestScore = tile;
             }
 //            System.out.println("------");
 //            System.out.println("" + tile.getCoordinateX() + "," + tile.getCoordinateY());
@@ -88,8 +89,8 @@ public class AStar {
 
         assert null != lowestScore;
         lowestScore.getTileButton().setBackground(Color.cyan);
-        gameboard.validate();
-        gameboard.repaint();
+        gameboard.lineDrawer.validate();
+        gameboard.lineDrawer.repaint();
 
         return lowestScore.getTileButton();
     }

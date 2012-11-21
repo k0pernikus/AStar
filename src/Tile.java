@@ -16,9 +16,6 @@ public class Tile {
     private boolean isClosed;
     private boolean isOpen;
 
-    private boolean isSolid;
-
-    private Tile parent;
     private List<Tile> neighbors;
 
     private TileButton tileButton;
@@ -52,20 +49,8 @@ public class Tile {
         return this.g;
     }
 
-    public Tile getParent() {
-        return this.parent;
-    }
-
     public boolean isOpen() {
         return this.isOpen;
-    }
-
-    public boolean isClosed() {
-        return this.isClosed;
-    }
-
-    public boolean isSolid() {
-        return this.isSolid;
     }
 
     public void setIsOpen(boolean value) {
@@ -76,14 +61,8 @@ public class Tile {
         this.isClosed = value;
     }
 
-    public void setParent(Tile parent) {
-        this.parent = parent;
-    }
-
-
-    public void setG(int g) {
+    private void setG(int g) {
         this.g = g;
-        calculateF();
     }
 
     public void calculateH(Tile targetTile) {
@@ -92,11 +71,10 @@ public class Tile {
 
     public void calculateF() {
         this.f = this.getH() + this.getG();
-        //this.tileButton.setText("" + f);
     }
 
     public void setIsSolid(boolean solidState) {
-        this.isSolid = solidState;
+        boolean solid = solidState;
     }
 
     public List<Tile> getNeighbors() {
@@ -109,7 +87,7 @@ public class Tile {
 
     public void calculateGcost(Tile target) {
         if (isDiagonal(target)) {
-            this.setG(10);
+            this.setG(14);
         } else {
             this.setG(10);
         }
@@ -121,22 +99,24 @@ public class Tile {
 
         int counter = 0;
 
-        for (int xNeighbor = -1; xNeighbor<=1; xNeighbor++) {
+        for (int xNeighbor = -1; xNeighbor <= 1; xNeighbor++) {
             for (int yNeighbor = -1; yNeighbor <= 1; yNeighbor++) {
-                if ((xNeighbor == 0) && (yNeighbor == 0)) { continue;}
+                if ((xNeighbor == 0) && (yNeighbor == 0)) {
+                    continue;
+                }
 
                 int xdiff = this.getCoordinateX() + xNeighbor;
                 int ydiff = this.getCoordinateY() + yNeighbor;
 
                 try {
                     TileButton neighbor = tileButtons[xdiff][ydiff];
-                    if(!neighbor.isWall()) {
+                    if (!neighbor.isWall()) {
                         this.neighbors.add(neighbor.getTile());
                     }
-                }catch (ArrayIndexOutOfBoundsException e){
-                    System.out.println("That is the end of the gameboard.");
+                } catch (ArrayIndexOutOfBoundsException e) {
+//                    System.out.println("That is the end of the gameboard.");
                 }
-           }
+            }
         }
 
         System.out.println(counter);
@@ -159,5 +139,4 @@ public class Tile {
     public TileButton getTileButton() {
         return this.tileButton;
     }
-
 }

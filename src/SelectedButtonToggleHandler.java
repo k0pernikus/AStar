@@ -4,13 +4,13 @@
 public class SelectedButtonToggleHandler {
     private GameBoard gameBoard;
     private TileButton selectedButton;
-    
+
     public SelectedButtonToggleHandler(GameBoard gameBoard, TileButton selectedButton) {
         this.gameBoard = gameBoard;
         this.selectedButton = selectedButton;
         this.handleClick();
     }
-    
+
     private void handleClick() {
         if (selectedButton.getState() == TileState.REGULAR) {
             selectedButton.turnIntoWall();
@@ -27,7 +27,7 @@ public class SelectedButtonToggleHandler {
                 selectedButton.turnIntoStandardField();
             }
         } else {
-            if (selectedButton.getState()== TileState.START) {
+            if (selectedButton.getState() == TileState.START) {
                 if (!gameBoard.hasTargetField) {
                     selectedButton.turnIntoEndField();
 
@@ -38,10 +38,10 @@ public class SelectedButtonToggleHandler {
                     selectedButton.turnIntoStandardField();
                     gameBoard.hasStartField = false;
                 }
-            } else if (selectedButton.getState()== TileState.TARGET) {
+            } else if (selectedButton.getState() == TileState.TARGET) {
                 selectedButton.turnIntoStandardField();
                 gameBoard.hasTargetField = false;
             }
         }
-    }      
+    }
 }
