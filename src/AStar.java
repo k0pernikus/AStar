@@ -47,36 +47,38 @@ public class AStar {
         int counter = 0;
         while (pathEntry != target) {
             try {
-                pathEntry = getTileWithLowestFScore(pathEntry, target);
+                pathEntry = getTileWithLowestFScore(path, pathEntry, target);
                 path.add(pathEntry);
             } catch (Exception e) {
                 System.out.println(path.size());
 
                 TileButton lastOne = path.get(path.size() - 1);
                 path.remove(lastOne);
-                lastOne = path.get(path.size() - 1);
-                pathEntry = lastOne;
-
-                if (path.isEmpty()) {
+                try {
+                    lastOne = path.get(path.size() - 1);
+                } catch (ArrayIndexOutOfBoundsException outOfBound) {
                     break;
                 }
-
+                pathEntry = lastOne;
             }
         }
 
         return path;
     }
 
-    public TileButton getTileWithLowestFScore(TileButton currentTileButton, TileButton targetButton) {
+    public TileButton getTileWithLowestFScore(List<TileButton> path, TileButton currentTileButton, TileButton targetButton) {
         currentTileButton.getTile().setIsOpen(false);
         System.out.println("target:" + targetButton.getCoordinateX() + targetButton.getCoordinateY());
         List<Tile> neighbors = currentTileButton.getTile().getNeighbors();
         for (Tile neighbor : neighbors) {
-            neighbor.calculateH(targetButton.getTile());
-            neighbor.calculateGcost(currentTileButton.getTile());
-            neighbor.calculateF();
-            neighbor.getTileButton().setText("" + neighbor.getF());
-            System.out.println("F: " + neighbor.getF());
+            if (!path.contains(neighbor.getTileButton())){
+                neighbor.calculateH(targetButton.getTile());
+                neighbor.calculateGcost(currentTileButton.getTile());
+                neighbor.calculateF();
+                neighbor.getTileButton().setText("<html><span style=\"color:red\">F:" + neighbor.getF() + "</span><br />H:" + neighbor.getH() + "<br />G:" + neighbor.getG()+"</html>");
+                System.out.println("F: " + neighbor.getF());
+            }
+
         }
 
         Tile lowestScore = null;
@@ -104,7 +106,7 @@ public class AStar {
         System.out.println("Lowest Score:" + lowestScore.getCoordinateX() + lowestScore.getCoordinateY() + lowestScore.getF());
 
         assert null != lowestScore;
-        lowestScore.getTileButton().setBackground(Color.cyan);
+        lowestScore.getTileButton().setBackground(Color.YELLOW);
         gameboard.lineDrawer.validate();
         gameboard.lineDrawer.repaint();
 

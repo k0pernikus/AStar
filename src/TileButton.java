@@ -52,19 +52,19 @@ public class TileButton extends JButton {
 
     public void turnIntoStandardField() {
         setState(TileState.REGULAR);
-        setBackground(Color.LIGHT_GRAY);
-//        this.setText("" + this.getCoordinateX() + ", " + this.getCoordinateY());
+        setBackground(Color.WHITE);
+        this.setText("");
     }
 
     public void turnIntoStartField() {
         this.setState(TileState.START);
         this.setText("Start");
-        this.setBackground(Color.GREEN);
+        this.setBackground(Color.RED);
     }
 
     public void turnIntoEndField() {
         this.setState(TileState.TARGET);
-        this.setBackground(Color.BLUE);
+        this.setBackground(Color.GREEN);
         this.setText("end");
     }
 

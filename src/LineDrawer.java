@@ -15,7 +15,7 @@ public class LineDrawer extends JPanel {
     }
 
     public void paint(Graphics g) {
-        float alpha = (float) 0.3;
+        float alpha = (float) 0.1;
         Color transparentBlue = new Color(0, 0, 1, alpha);
         Graphics2D g2 = (Graphics2D) g;
         super.paint(g2);
@@ -33,9 +33,5 @@ public class LineDrawer extends JPanel {
 
     public void addToPath(Point point) {
         this.path.add(point);
-    }
-
-    public void clearPath() {
-        this.path.clear();
     }
 }
