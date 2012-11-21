@@ -50,12 +50,8 @@ public class AStar {
             if (!path.contains(pathEntry)) {
                 path.add(pathEntry);
             }
-
-            if (counter++ == 10) {
-                break;
-            }
-
         }
+
         return path;
     }
 
