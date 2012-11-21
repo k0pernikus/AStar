@@ -43,12 +43,15 @@ public class AStar {
     public List<TileButton> getPath(TileButton startButton, TileButton target) {
         TileButton pathEntry = startButton;
         path.add(pathEntry);
+        pathEntry.getTile().setIsOpen(false);
 
         int counter = 0;
         while (pathEntry != target) {
             pathEntry = getTileWithLowestFScore(pathEntry, target);
-            if (!path.contains(pathEntry)) {
-                path.add(pathEntry);
+            path.add(pathEntry);
+
+            if (counter++ == 10000) {
+                break;
             }
         }
 
@@ -56,6 +59,7 @@ public class AStar {
     }
 
     public TileButton getTileWithLowestFScore(TileButton currentTileButton, TileButton targetButton) {
+        currentTileButton.getTile().setIsOpen(false);
         System.out.println("target:" + targetButton.getCoordinateX() + targetButton.getCoordinateY());
         List<Tile> neighbors = currentTileButton.getTile().getNeighbors();
         for (Tile neighbor : neighbors) {
@@ -66,9 +70,18 @@ public class AStar {
             System.out.println("F: " + neighbor.getF());
         }
 
-        Tile lowestScore = neighbors.get(0);
+        Tile lowestScore = null;
+        for (Tile neighbor : neighbors) {
+            if (neighbor.isOpen()) {
+                lowestScore = neighbor;
+            } else {
+                System.out.println("dafuq");
+            }
+
+        }
+
         for (Tile tile : neighbors) {
-            if (lowestScore.getF() > tile.getF()) {
+            if (lowestScore.getF() > tile.getF() && tile.isOpen()) {
                 lowestScore = tile;
             }
 //            System.out.println("------");

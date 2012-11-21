@@ -13,7 +13,6 @@ public class Tile {
     private int f;
     private int h;
 
-    private boolean isClosed;
     private boolean isOpen;
 
     private List<Tile> neighbors;
@@ -24,8 +23,7 @@ public class Tile {
         this.neighbors = new ArrayList<Tile>();
         this.tileButton = tileButton;
 
-        this.setIsOpen(false);
-        this.setIsClosed(false);
+        this.setIsOpen(!tileButton.isWall());
         this.setIsSolid(tileButton.isWall());
     }
 
@@ -55,10 +53,6 @@ public class Tile {
 
     public void setIsOpen(boolean value) {
         this.isOpen = value;
-    }
-
-    public void setIsClosed(boolean value) {
-        this.isClosed = value;
     }
 
     private void setG(int g) {
