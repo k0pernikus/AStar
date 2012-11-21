@@ -87,7 +87,9 @@ public class Tile {
         }
     }
 
-    public void findNeighbours(TileButton[][] tileButtons) {
+    public void findOpenNeighbours(TileButton[][] tileButtons) {
+        this.neighbors = new ArrayList<Tile>();
+
         this.getCoordinateY();
         this.getCoordinateX();
 
@@ -104,7 +106,7 @@ public class Tile {
 
                 try {
                     TileButton neighbor = tileButtons[xdiff][ydiff];
-                    if (!neighbor.isWall()) {
+                    if (!neighbor.isWall() && neighbor.getTile().isOpen()) {
                         this.neighbors.add(neighbor.getTile());
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {

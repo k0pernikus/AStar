@@ -10,7 +10,6 @@ import java.util.List;
  * @author k0pernikus
  */
 public class AStar {
-    private List<Tile> openList;
     private List<TileButton> path;
     private TileButton[][] tileButtons;
     private GameBoard gameboard;
@@ -35,7 +34,7 @@ public class AStar {
         for (TileButton[] buttons : tileButtons) {
             for (TileButton button : buttons) {
                 Tile tile = button.getTile();
-                tile.findNeighbours(tileButtons);
+                tile.findOpenNeighbours(tileButtons);
             }
         }
     }
@@ -47,8 +46,22 @@ public class AStar {
 
         int counter = 0;
         while (pathEntry != target) {
-            pathEntry = getTileWithLowestFScore(pathEntry, target);
-            path.add(pathEntry);
+            try {
+                pathEntry = getTileWithLowestFScore(pathEntry, target);
+                path.add(pathEntry);
+            } catch (Exception e) {
+                System.out.println(path.size());
+
+                TileButton lastOne = path.get(path.size() - 1);
+                path.remove(lastOne);
+                lastOne = path.get(path.size() - 1);
+                pathEntry = lastOne;
+
+                if (path.isEmpty()) {
+                    break;
+                }
+
+            }
         }
 
         return path;
