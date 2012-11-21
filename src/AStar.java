@@ -84,11 +84,10 @@ public class AStar {
             if (neighbor.isOpen()) {
                 lowestScore = neighbor;
             }
-
         }
+        assert lowestScore != null;
 
         for (Tile tile : neighbors) {
-            assert lowestScore != null;
             if (lowestScore.getF() > tile.getF() && tile.isOpen()) {
                 lowestScore = tile;
             }
