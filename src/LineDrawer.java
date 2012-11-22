@@ -20,6 +20,8 @@ public class LineDrawer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         super.paint(g2);
 
+        throw RuntimeException
+
         if (path.size() >= 2) {
             g2.setStroke(stroke);
             g2.setPaint(transparentBlue);
