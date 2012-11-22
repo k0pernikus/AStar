@@ -1,249 +1,153 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-
 /**
  * Class for representing a gameboard of Smartbuttons. Containts a AStar-object
  * for finding paths between tiles
- * 
+ *
  * @author jesperpersson
- * 
+ * @author k0pernikus
  */
 
 public class GameBoard extends JFrame implements ActionListener {
-	private int columns;
-	private int rows;
-	private boolean startPlaced;
-	private boolean stopPlaced;
-	private SmartButton stop;
-	private SmartButton start;
-	LinePanel gridPanel;
+    protected int gameboardHeight;
+    protected int gameboardWidth;
+    protected boolean hasStartField;
+    protected boolean hasTargetField;
+    protected TileButton target;
+    protected TileButton start;
+    LineDrawer lineDrawer;
+    TileButton[][] tileButtons;
 
-	SmartButton[][] gameBoardState;
+    // Constructor, takes two ints for parameters. Will create a main gridview
+    // of smartbuttons, the size set by the parameters gameboardWidth and gameboardHeight.
+    public GameBoard(int width, int height) {
+        this.gameboardHeight = height;
+        this.gameboardWidth = width;
 
-	// Constructor, takes two ints for parameters. Will create a main gridview
-	// of smartbuttons, the size set by the parameters rows and columns.
-	public GameBoard(int rows, int columns) {
-		this.columns = columns;
-		this.rows = rows;
-		startPlaced = false;
-		stopPlaced = false;
+        hasStartField = false;
+        hasTargetField = false;
 
-		this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
+        this.initGameboardHoldingPanel();
 
-		// Initiates and specifies the panel holding the gameboard
-		gridPanel = new LinePanel();
-		gridPanel.setPreferredSize(new Dimension(rows * 31, columns * 31));
-		gridPanel.setLayout(new GridLayout(rows, columns));
-		this.add(gridPanel, BorderLayout.CENTER);
+          this.initControlPanel();
 
-		// Initiates and specifies the controlpanel.
-		JPanel controlPanel = new JPanel();
-		controlPanel.setPreferredSize(new Dimension(rows * 31, 30));
-		this.add(controlPanel, BorderLayout.SOUTH);
+        // Initiate matrix for storing buttons
+        tileButtons = new TileButton[gameboardHeight][gameboardWidth];
+        this.createButtons();
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        this.pack();
+    }
 
-		// Creates buttons and to be placed in the control panel
+    public static void main(String[] args) {
+        new GameBoard(Config.GAMEBOARD_WIDTH, Config.GAMEBOARD_HEIGHT);
+    }
 
-		JButton findPath = new JButton("Find Path");
-		findPath.setActionCommand("findPath");
-		findPath.addActionListener(this);
-		controlPanel.add(findPath);
+    private void initControlPanel() {
+        JPanel controlPanel = new JPanel();
+        controlPanel.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, Config.TILE_SIZE_IN_PIXEL));
+        this.add(controlPanel, BorderLayout.SOUTH);
+        ButtonHandler btnHandler = new ButtonHandler(this, controlPanel);
+        btnHandler.addButtons();
+    }
 
-		JButton reset = new JButton("Reset");
-		reset.setActionCommand("reset");
-		reset.addActionListener(this);
-		controlPanel.add(reset);
+    private void initGameboardHoldingPanel() {
+        lineDrawer = new LineDrawer();
+        lineDrawer.setPreferredSize(new Dimension(this.gameboardWidth * Config.TILE_SIZE_IN_PIXEL + 1, gameboardHeight * Config.TILE_SIZE_IN_PIXEL));
+        lineDrawer.setLayout(new GridLayout(this.gameboardWidth, this.gameboardHeight));
+        this.add(lineDrawer, BorderLayout.CENTER);
+    }
 
-		JButton exit = new JButton("Exit");
-		exit.setActionCommand("exit");
-		exit.addActionListener(this);
-		controlPanel.add(exit);
+    /**
+     * Fills the matrix tileButtons with buttons, and adds each of them to
+     * the gridpanel
+     */
+    private void createButtons() {
+        for (int x = 0; x < gameboardWidth; x++) {
+            for (int y = 0; y < gameboardHeight; y++) {
+                tileButtons[x][y] = new TileButton(x, y, this);
+                lineDrawer.add(tileButtons[x][y]);
+            }
+        }
+    }
 
-		// Initiate matrix for storing buttons
-		gameBoardState = new SmartButton[rows][columns];
-		createButtons();
+    /**
+     * Given a list of SmartButtons, will change the background of every tile in
+     * the list
+     *
+     * @param path
+     */
+    private void paintPath(List<TileButton> path) {
+        if (path.size() > 2) {
+            // Starting from second element and stopping one before reaching the
+            // last element in order to keep look on start/target-buttons intact.
+            for (TileButton tileButton : path) {
+                //Get center point of each element, add them to path in LineDrawer
+                Rectangle place = tileButton.getBounds();
+                int x = place.x + place.width / 2;
+                int y = place.y + place.height / 2;
 
-		
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		this.setVisible(true);
-		this.pack();
+                lineDrawer.addToPath(new Point(x, y));
+            }
 
-	}
+            lineDrawer.repaint();
+        }
+    }
 
-	public static void main(String[] args) {
-		new GameBoard(20,20);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // If the reset-button is pressed, the gameboard will be reset, all
+        // buttons changed to regular and white, start and target will be marked as unexisting, and any paths in the lineDrawer will be erased.
+        if (e.getActionCommand().equals("reset")) {
+            this.resetPressed();
+        } else if (e.getActionCommand().equals("exit")) {
+            System.exit(0);
+        } else if (e.getActionCommand().equals("findPath")) {
+            if (hasStartField && hasTargetField) {
+                this.findPath();
+            }
+        } else {
+            String[] coordinates = e.getActionCommand().split(",");
 
-	/**
-	 * Fills the matrix gameBoardState with buttons, and adds each of them to
-	 * the gridpanel
-	 */
-	private void createButtons() {
-		for (int i = 0; i < rows; i++) {
-			for (int l = 0; l < columns; l++) {
-				gameBoardState[i][l] = new SmartButton(i, l, this);
-				gameBoardState[i][l].setActionCommand(i + "," + l);
-				gridPanel.add(gameBoardState[i][l]);
-			}
-		}
-	}
+            int x = Integer.parseInt(coordinates[0]);
+            int y = Integer.parseInt(coordinates[1]);
 
-	public int getRows() {
-		return this.rows;
-	}
+            this.toggleState(x, y);
+        }
+    }
 
-	public int getColumns() {
-		return this.columns;
-	}
+    private void findPath() {
+        AStar pathfinder = new AStar(this, this.tileButtons);
 
-	public SmartButton getSmartButton(int row, int column) {
-		return gameBoardState[row][column];
-	}
+        TileButton start = this.start;
+        TileButton target = this.target;
 
-	/**
-	 * Given a list of SmartButtons, will change the background of every tile in
-	 * the list
-	 * 
-	 * @param path
-	 */
-	private void paintPath(List<SmartButton> path) {
-		for (int i = 0; i < path.size(); i++) {
+        System.out.println("start");
+        start.getTile().log();
+        System.out.println("target");
+        target.getTile().log();
+        List<TileButton> path = pathfinder.getPath(start, target);
 
-		}
-		if (path.size() > 2) {
-			// Starting from second element and stopping one before reaching the
-			// last element in order to keep look on start/stop-buttons intact.
-			for (int i = 0; i < path.size(); i++) {
-				//Get center point of each element, add them to path in LinePanel
-				Rectangle place = path.get(i).getBounds();
-				int x = place.x+place.width/2;
-				int y = place.y+place.height/2;
-				gridPanel.addToPath(new Point(x,y));
-			}
-			gridPanel.repaint();
-		}
-	}
+        if (!path.isEmpty()) {
+            paintPath(path);
+        } else {
+            System.out.println("No path found ");
+        }
+    }
 
-	private Point convertPosToTile(Point point) {
-		int y = point.y / this.rows;
-		int x = point.x / this.columns;
-		return new Point(x, y);
-	}
+    private void toggleState(int x, int y) {
+        TileButton selectedTile = this.tileButtons[x][y];
+        new SelectedButtonToggleHandler(this, selectedTile);
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// If the reset-button is pressed, the gameboard will be reset, all
-		// buttons changed to regular and white, start and stop will be marked as unexisting, and any paths in the gridPanel will be erased.
-		if (e.getActionCommand().equals("reset")) {
-			startPlaced = false;
-			stopPlaced = false;
-			stop = null;
-			start = null;
-			gridPanel.clearPath();
-
-			for (int i = 0; i < rows; i++) {
-				for (int l = 0; l < columns; l++) {
-					gameBoardState[i][l].setText(null);
-					gameBoardState[i][l].setBackground(Color.WHITE);
-					gameBoardState[i][l].state = TileState.REGULAR;
-
-				}
-
-			}
-		}
-
-		else if (e.getActionCommand().equals("exit")) {
-			System.exit(0);
-		}
-
-		else if (e.getActionCommand().equals("findPath")) {
-			for (int i = 0; i < rows; i++) {
-				for (int l = 0; l < columns; l++) {
-					if (gameBoardState[i][l].state == TileState.REGULAR) {
-						gameBoardState[i][l].setBackground(Color.WHITE);
-					}
-
-				}
-			}
-			if (startPlaced && stopPlaced) {
-				AStar pathfinder = new AStar(gameBoardState, rows, columns);
-				List<SmartButton> path = pathfinder.getPath(start, stop);
-//				for (int i = 0; i < rows-1; i++){
-//					for (int l=0;i<columns-1;l++){
-//						System.out.println("Tile X: " + gameBoardState[i][l].getRow() + " Y: " + gameBoardState[i][l].getColumn() + "is " + gameBoardState[i][l].state.toString());
-//					}
-//				}
-				System.out.println("Tile ");
-				// If a path exists
-				if (path != null) {
-					paintPath(path);
-				}
-				// If no possible path was found
-				else {
-					System.out.println("No path found ");
-				}
-			}
-
-		}
-		
-
-		/*
-		 * Accessed if the call is made from a button in the gridView.
-		 */
-		System.out.println(e.getActionCommand());
-		for (int i = 0; i < rows; i++) {
-			for (int l = 0; l < columns; l++) {
-				if (e.getActionCommand().equals(i + "," + l)) {
-					if (gameBoardState[i][l].state == TileState.REGULAR) {
-						gameBoardState[i][l].setBackground(Color.BLACK);
-						gameBoardState[i][l].state = TileState.COLLIDABLE;
-
-					} else if (gameBoardState[i][l].state == TileState.COLLIDABLE) {
-						if (!startPlaced) {
-							gameBoardState[i][l].state = TileState.START;
-							gameBoardState[i][l].setBackground(Color.GREEN);
-							gameBoardState[i][l].setText("Start");
-							startPlaced = true;
-							start = gameBoardState[i][l];
-						} else {
-							gameBoardState[i][l].setBackground(Color.WHITE);
-							gameBoardState[i][l].state = TileState.REGULAR;
-						}
-
-					} else if (gameBoardState[i][l].state == TileState.START) {
-						if (!stopPlaced) {
-							gameBoardState[i][l].state = TileState.STOP;
-							gameBoardState[i][l].setText("stop");
-							gameBoardState[i][l].setBackground(Color.BLUE);
-							this.stop = gameBoardState[i][l];
-							stopPlaced = true;
-							startPlaced = false;
-						} else {
-							gameBoardState[i][l].setBackground(Color.WHITE);
-							gameBoardState[i][l].state = TileState.REGULAR;
-							gameBoardState[i][l].setText(null);
-							startPlaced = false;
-						}
-
-					} else if (gameBoardState[i][l].state == TileState.STOP) {
-						gameBoardState[i][l].setText(null);
-						gameBoardState[i][l].setBackground(Color.WHITE);
-						gameBoardState[i][l].state = TileState.REGULAR;
-						stopPlaced = false;
-					}
-				}
-			}
-		}
-	}
+    private void resetPressed() {
+        new GameBoard(Config.GAMEBOARD_WIDTH, Config.GAMEBOARD_HEIGHT);
+    }
 }
