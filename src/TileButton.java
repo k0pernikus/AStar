@@ -6,9 +6,12 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
 /**
- * A Button class capable of representing different kinds of "states", Start, Stop, Regular or Collidable.
+ * A Button class capable of representing different kinds of "states":
+ * Start, Stop, Regular or Wall.
  *
+ * @author k0pernikus
  * @author jesperpersson
+ *
  */
 
 public class TileButton extends JButton {

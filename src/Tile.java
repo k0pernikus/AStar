@@ -6,9 +6,9 @@ import java.util.List;
  * All variables for the algorithm is stored within the Tile
  *
  * @author jesperpersson
+ * @author k0pernikus
  */
 public class Tile {
-
     private int g;
     private int f;
     private int h;
@@ -21,8 +21,7 @@ public class Tile {
 
     public Tile(TileButton tileButton) {
         this.neighbors = new ArrayList<Tile>();
-        this.tileButton = tileButton;
-
+        this.setTileButton(tileButton);
         this.setIsOpen(!tileButton.isWall());
         this.setIsSolid(tileButton.isWall());
     }
@@ -93,8 +92,6 @@ public class Tile {
         this.getCoordinateY();
         this.getCoordinateX();
 
-        int counter = 0;
-
         for (int xNeighbor = -1; xNeighbor <= 1; xNeighbor++) {
             for (int yNeighbor = -1; yNeighbor <= 1; yNeighbor++) {
                 if ((xNeighbor == 0) && (yNeighbor == 0)) {
@@ -110,22 +107,19 @@ public class Tile {
                         this.neighbors.add(neighbor.getTile());
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-//                    System.out.println("That is the end of the gameboard.");
+                    // End of the GameBoard, continue
                 }
             }
         }
-
-        System.out.println(counter);
     }
 
     public void log() {
         System.out.print("-------------------" + "\n" +
                 "x =" + this.getCoordinateX() + "\n" +
-                "y =" + this.getCoordinateY() + "\n");
-//                "G =" + this.getG() + "\n" +
-//                "H =" + this.getH() + "\n" +
-//                "F =" + this.getF() + "\n\n
-//
+                "y =" + this.getCoordinateY() + "\n" +
+                "G =" + this.getG() + "\n" +
+                "H =" + this.getH() + "\n" +
+                "F =" + this.getF() + "\n");
     }
 
     public void setTileButton(TileButton button) {
